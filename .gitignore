@@ -1,0 +1,4 @@
+.mesh/
+*.log
+bin/
+deploy/fly.*.toml

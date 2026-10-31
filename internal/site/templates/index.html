@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{.Profile.Name}} · Go backend</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header>
+  <h1>{{.Profile.Name}} <span>· {{.Profile.Role}}</span></h1>
+  <div class="sub">{{.Profile.Focus}}</div>
+  <div class="sub">{{.Profile.Location}} · <a href="mailto:{{.Profile.Email}}">{{.Profile.Email}}</a></div>
+  <div class="links mono">{{range .Profile.Links}}<a href="{{.URL}}">{{.Label}}</a>{{end}}</div>
+  <div class="muted">You are talking to node <b class="mono">{{.Node}}</b> ({{.Region}}). Every panel below calls this Go server.</div>
+</header>
+
+<main>
+  <section class="card wide">
+    <h2><b>01</b> · Ask my work: search over the source of my three repos, every answer cited</h2>
+    <form id="askf" class="ask"><input id="q" maxlength="300" placeholder="Ask anything about Granth, Smriti or Sutra…"><button>Ask</button></form>
+    <div class="chips" id="chips"></div>
+    <div id="ans"></div>
+    <div class="muted">Extractive: you see the actual passages and lines, nothing generated.</div>
+  </section>
+
+  <section class="card">
+    <h2><b>02</b> · Resume mesh: Raft across <span id="ncount">4</span> nodes</h2>
+    <div class="stat"><span>term <b id="term">–</b></span><span>leader <b id="leader">–</b></span><span>resume version <b id="ver">–</b></span><span>page requests ok <b id="okc">0</b> / failed <b id="failc">0</b></span></div>
+    <div class="nodes" id="nodes"></div>
+    <div class="row">
+      <button class="danger" data-chaos="leader">Isolate the leader</button>
+      <button class="ghost" id="followerBtn">Isolate a follower</button>
+      <button class="ghost" id="writeBtn">Replicate an update</button>
+    </div>
+    <div class="log mono" id="mlog"></div>
+    <div class="muted">Isolation is a 20 s network partition. At most one node may be out at a time, so the cluster always keeps a majority.</div>
+  </section>
+
+  <section class="card">
+    <h2><b>03</b> · Race simulator: real goroutines in Go WebAssembly</h2>
+    <div class="row">
+      <span class="muted">writers per tick</span><input type="range" id="traffic" min="1" max="128" value="16"><b id="tv">16</b>
+      <div class="switch"><button data-mode="none" class="on">no sync</button><button data-mode="mutex">sync.Mutex</button><button data-mode="chan">channels</button></div>
+      <button class="ghost" id="resetRace">reset</button>
+    </div>
+    <div class="stat"><span>increments <b id="want">0</b></span><span>counted <b id="views">0</b></span><span>lost <b id="lost">0</b></span><span>torn fields <b id="torn">0</b></span></div>
+    <div class="race mono" id="race">loading racesim.wasm…</div>
+    <div class="muted">The same bug class Smriti prevents in Postgres: two writers updating one fact. <a href="https://github.com/Aravindh97/resume/blob/main/internal/racesim/racesim.go">source</a></div>
+  </section>
+
+  <section class="card">
+    <h2><b>04</b> · Career as a git log</h2>
+    <form id="gitf" class="ask"><span class="mono prompt">$ career</span><input id="gitcmd" class="mono" value="log" maxlength="80"><button>run</button></form>
+    <div class="chips"><button class="ghost mono" data-git="log">log</button><button class="ghost mono" data-git="show granth">show granth</button><button class="ghost mono" data-git="cherry-pick skills=go,temporal">cherry-pick skills=go,temporal</button></div>
+    <pre class="term" id="term1"></pre>
+    <div class="muted">Locally: <code>go run github.com/Aravindh97/resume/cmd/career@latest init ./aravindh &amp;&amp; cd aravindh &amp;&amp; git log</code></div>
+  </section>
+
+  <section class="card">
+    <h2><b>05</b> · Measured, not claimed</h2>
+    <table>
+      <tr><th>Project</th><th>Metric</th><th>Result</th><th>Baseline</th></tr>
+      {{range .Evals}}<tr><td><a href="{{.Source}}">{{.Project}}</a></td><td>{{.Metric}}</td><td class="mono">{{.Result}}</td><td class="mono">{{.Baseline}}</td></tr>{{end}}
+    </table>
+    <div class="muted">Each project links to the report that produced the number.</div>
+  </section>
+</main>
+<script src="/static/wasm_exec.js"></script>
+<script src="/static/app.js"></script>
+</body>
+</html>

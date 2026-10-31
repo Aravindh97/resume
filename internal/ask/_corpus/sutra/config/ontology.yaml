@@ -1,0 +1,40 @@
+# Which entities exist and how each source maps onto them.
+entities:
+  Company:
+    description: A supplier or customer business. GSTIN is per state registration; PAN identifies the legal entity.
+    attributes:
+      name: name
+      gstin: gstin
+      pan: pan
+      phone: phone
+      email: email
+      city: city
+      category: string
+
+sources:
+  erp_vendors:            # vendor master in the ERP's Postgres database
+    kind: postgres_cdc
+    table: public.vendors
+    entity: Company
+    id: vendor_id
+    priority: 1           # ERP is the system of record for legal details
+    map:
+      name: vendor_name
+      gstin: gst_no
+      phone: contact_phone
+      city: city
+      category: category
+
+  crm_accounts:           # accounts in the CRM, read over its REST API
+    kind: rest
+    path: /api/v1/accounts
+    entity: Company
+    id: id
+    priority: 2
+    map:
+      name: account_name
+      gstin: gstin
+      pan: pan
+      phone: phone
+      email: email
+      city: billing_city

@@ -1,0 +1,31 @@
+embedder=hashing-384 index=*index.OpenSearch questions=44
+
+mode        n   hit@1   hit@5  mrr@10   cite@1       p50       p95
+lexical    44   0.841   0.955   0.891    0.864    3.86ms   4.597ms
+vector     44   0.886   0.955   0.917    0.909   4.576ms   5.664ms
+hybrid     44   0.886   0.977   0.925    0.909   4.885ms   7.231ms
+
+[lexical] MISS q16 "Do I have to rotate my password every 90 days?" (want infosec-policy.md: "not on a fixed schedule")
+   #1 it-helpdesk-faq.txt lex=1 vec=0 fused=0.0164  "IT Helpdesk FAQ How do I reset my password? Go to the self-service por"
+   #2 leave-policy.md lex=2 vec=0 fused=0.0161  "Kaveri Textiles Leave Policy > Earned Leave Employees accrue 1.5 days "
+   #3 travel-policy.md lex=3 vec=0 fused=0.0159  "Business Travel and Expense Policy > Expense Claims Expense claims mus"
+
+[lexical] MISS q44 "what should dyeing unit workers wear" (want safety-tamil.md: "கையுறைகள்")
+   #1 product-catalog.csv lex=1 vec=0 fused=0.0164  "SKU | Product | Fabric | GSM | Price per unit (INR) | Minimum order qu"
+   #2 it-helpdesk-faq.txt lex=2 vec=0 fused=0.0161  "IT Helpdesk FAQ How do I reset my password? Go to the self-service por"
+   #3 vendor-onboarding.html lex=3 vec=0 fused=0.0159  "Vendor Onboarding Guide > Payment Terms Vendor category | Payment term"
+
+[vector] MISS q17 "Which systems need MFA?" (want infosec-policy.md: "Multi-factor authentication is mandatory")
+   #1 quality-manual.pdf lex=0 vec=1 fused=0.0164  "Fabric Inspection Every roll of fabric is inspected on the 4-point sys"
+   #2 vendor-onboarding.html lex=0 vec=2 fused=0.0161  "Vendor Onboarding Guide > Payment Terms Standard payment terms are 45 "
+   #3 office-hours-hi.md lex=0 vec=3 fused=0.0159  "कार्यालय समय और उपस्थिति नीति > कार्य समय कार्यालय का समय सुबह 9 बजे स"
+
+[vector] MISS q44 "what should dyeing unit workers wear" (want safety-tamil.md: "கையுறைகள்")
+   #1 infosec-policy.md lex=0 vec=1 fused=0.0164  "Information Security Policy > Laptops All company laptops use full dis"
+   #2 product-catalog.csv lex=0 vec=2 fused=0.0161  "SKU | Product | Fabric | GSM | Price per unit (INR) | Minimum order qu"
+   #3 leave-policy.md lex=0 vec=3 fused=0.0159  "Kaveri Textiles Leave Policy > Public Holidays The company observes 12"
+
+[hybrid] MISS q44 "what should dyeing unit workers wear" (want safety-tamil.md: "கையுறைகள்")
+   #1 product-catalog.csv lex=1 vec=2 fused=0.0325  "SKU | Product | Fabric | GSM | Price per unit (INR) | Minimum order qu"
+   #2 it-helpdesk-faq.txt lex=2 vec=6 fused=0.0313  "IT Helpdesk FAQ How do I reset my password? Go to the self-service por"
+   #3 vendor-onboarding.html lex=3 vec=13 fused=0.0296  "Vendor Onboarding Guide > Payment Terms Vendor category | Payment term"

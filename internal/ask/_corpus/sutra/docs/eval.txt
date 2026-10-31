@@ -1,0 +1,42 @@
+dev set: seed=7 n=300
+records=503 companies=288
+
+method         precision  recall     f1    tp    fp    fn  entities  review
+exact name         0.468   0.121  0.193    29    33   210       448       0
+GSTIN only         1.000   0.523  0.687   125     0   114       388       0
+sutra              1.000   0.992  0.996   237     0     2       290      85
+
+threshold sweep
+method         precision  recall     f1    tp    fp    fn  entities  review
+match>=0.70        0.940   0.992  0.965   237    15     2       285      72
+match>=0.75        1.000   0.992  0.996   237     0     2       290      85
+match>=0.80        1.000   0.992  0.996   237     0     2       290      85
+match>=0.85        1.000   0.992  0.996   237     0     2       290      85
+match>=0.90        1.000   0.946  0.972   226     0    13       300      96
+match>=0.95        1.000   0.665  0.799   159     0    80       358     163
+
+MISSED "Kongu Processors" vs "Kongu Processors Private Limited": score 0.87 (near-identical name, same city)
+MISSED "Murugan Textiles Pvt Ltd" vs "Mruugan Textiles & Co": score 0.72 (similar name, same city)
+
+held-out seeds (rules were not tuned on these)
+n      seed  method      precision  recall     f1  review
+300    101   GSTIN only      1.000   0.575  0.730       0
+300    101   sutra           0.958   0.983  0.970      74
+300    202   GSTIN only      1.000   0.612  0.759       0
+300    202   sutra           0.988   0.992  0.990      82
+300    303   GSTIN only      1.000   0.623  0.768       0
+300    303   sutra           0.996   0.996  0.996      61
+300    404   GSTIN only      1.000   0.602  0.751       0
+300    404   sutra           0.984   1.000  0.992      66
+300    505   GSTIN only      1.000   0.563  0.720       0
+300    505   sutra           0.942   0.980  0.960      65
+2000   101   GSTIN only      1.000   0.564  0.721       0
+2000   101   sutra           0.899   0.967  0.931    5474
+2000   202   GSTIN only      1.000   0.561  0.719       0
+2000   202   sutra           0.880   0.971  0.923    5336
+2000   303   GSTIN only      1.000   0.583  0.736       0
+2000   303   sutra           0.907   0.962  0.934    5172
+2000   404   GSTIN only      1.000   0.551  0.710       0
+2000   404   sutra           0.908   0.969  0.937    4887
+2000   505   GSTIN only      1.000   0.562  0.720       0
+2000   505   sutra           0.891   0.962  0.925    4674

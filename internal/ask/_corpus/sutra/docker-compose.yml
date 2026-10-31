@@ -1,0 +1,17 @@
+# Local stack, published on 127.0.0.1 only. Set the passwords in .env.
+services:
+  warehouse:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: sutra
+      POSTGRES_DB: sutra
+      POSTGRES_PASSWORD: ${WAREHOUSE_PASSWORD:?set WAREHOUSE_PASSWORD in .env}
+    ports: ["127.0.0.1:5432:5432"]
+  erp:
+    image: postgres:16-alpine
+    command: ["postgres", "-c", "wal_level=logical"]
+    environment:
+      POSTGRES_USER: erp
+      POSTGRES_DB: erp
+      POSTGRES_PASSWORD: ${ERP_PASSWORD:?set ERP_PASSWORD in .env}
+    ports: ["127.0.0.1:5433:5432"]
