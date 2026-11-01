@@ -47,7 +47,7 @@ var Milestones = []Milestone{
 		Body: []string{"OpenSchool Enterprise, FamineLens, Kindred (Python/FastAPI)",
 			"TerraZero, Nuclear Legacy & Civil Safety, EcoSignal (Go net/http)",
 			"TerraZero: live USGS feed with bounded fetch, cache and last-good fallback"},
-		Skills: []string{"go", "python", "fastapi", "react", "nextjs"}, Link: GitHub},
+		Skills: []string{"go", "python", "fastapi", "react", "nextjs"}, Link: GitHub + "/aravindh-impact-portfolio"},
 	{ID: "granth", Date: "2026-10-31", Subject: "feat(granth): ingestion pipeline and hybrid retrieval",
 		Body: []string{"One Temporal workflow per document; idempotent activities, dead-letter ledger in Postgres",
 			"BM25 + filtered k-NN fused with RRF in OpenSearch; citations to file, page and section",
