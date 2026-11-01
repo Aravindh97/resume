@@ -4,7 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{.Profile.Name}} · Go backend</title>
-<link rel="stylesheet" href="/static/style.css">
+{{if .Static}}<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; base-uri 'none'; form-action 'none'">
+<script src="static/static-mode.js"></script>{{end}}
+<link rel="stylesheet" href="static/style.css">
 </head>
 <body>
 <header>
@@ -12,7 +14,8 @@
   <div class="sub">{{.Profile.Focus}}</div>
   <div class="sub">{{.Profile.Location}} · <a href="mailto:{{.Profile.Email}}">{{.Profile.Email}}</a></div>
   <div class="links mono">{{range .Profile.Links}}<a href="{{.URL}}">{{.Label}}</a>{{end}}</div>
-  <div class="muted">You are talking to node <b class="mono">{{.Node}}</b> ({{.Region}}). Every panel below calls this Go server.</div>
+  {{if .Static}}<div class="muted">Everything below is Go compiled to WebAssembly, running in your browser: no server, no tracking.</div>
+  {{else}}<div class="muted">You are talking to node <b class="mono">{{.Node}}</b> ({{.Region}}). Every panel below calls this Go server.</div>{{end}}
 </header>
 
 <main>
@@ -25,7 +28,7 @@
   </section>
 
   <section class="card">
-    <h2><b>02</b> · Resume mesh: Raft across <span id="ncount">4</span> nodes</h2>
+    <h2><b>02</b> · Resume mesh: Raft across <span id="ncount">4</span> nodes{{if .Static}}, running in this tab{{end}}</h2>
     <div class="stat"><span>term <b id="term">–</b></span><span>leader <b id="leader">–</b></span><span>resume version <b id="ver">–</b></span><span>page requests ok <b id="okc">0</b> / failed <b id="failc">0</b></span></div>
     <div class="nodes" id="nodes"></div>
     <div class="row">
@@ -34,7 +37,8 @@
       <button class="ghost" id="writeBtn">Replicate an update</button>
     </div>
     <div class="log mono" id="mlog"></div>
-    <div class="muted">Isolation is a 20 s network partition. At most one node may be out at a time, so the cluster always keeps a majority.</div>
+    {{if .Static}}<div class="muted">Four real <a href="https://github.com/Aravindh97/resume/blob/main/internal/raft/raft.go">internal/raft</a> nodes in WebAssembly, connected by an in-memory network. Isolation is a 15 s partition; at most one node may be out, so a majority always remains. The multi-region server version is in the repo.</div>
+    {{else}}<div class="muted">Isolation is a 20 s network partition. At most one node may be out at a time, so the cluster always keeps a majority.</div>{{end}}
   </section>
 
   <section class="card">
@@ -66,7 +70,7 @@
     <div class="muted">Each project links to the report that produced the number.</div>
   </section>
 </main>
-<script src="/static/wasm_exec.js"></script>
-<script src="/static/app.js"></script>
+<script src="static/wasm_exec.js"></script>
+<script src="static/app.js"></script>
 </body>
 </html>

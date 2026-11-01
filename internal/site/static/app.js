@@ -1,7 +1,17 @@
 "use strict";
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+// On GitHub Pages (window.STATIC_SITE) the API is answered by the Go
+// WebAssembly module in this tab instead of a server.
+let wasmReady;
 async function api(path, opts) {
+  if (window.STATIC_SITE) {
+    while (!window.goapi) await new Promise((r) => setTimeout(r, 20)); // wasm still loading
+    const raw = await new Promise((res) => goapi((opts && opts.method) || "GET", path, (opts && opts.body) || "", res));
+    const r = JSON.parse(raw);
+    if (r.status >= 300) throw new Error((r.body && r.body.error) || ("HTTP " + r.status));
+    return r.body;
+  }
   const r = await fetch(path, opts);
   const j = await r.json().catch(() => ({}));
   if (!r.ok) throw new Error(j.error || ("HTTP " + r.status));
@@ -24,12 +34,12 @@ $("askf").onsubmit = (e) => { e.preventDefault(); ask($("q").value); };
 async function ask(q) {
   $("ans").innerHTML = '<div class="muted">searching…</div>';
   try {
-    const r = await api("/api/v1/ask?q=" + encodeURIComponent(q));
+    const r = await api("api/v1/ask?q=" + encodeURIComponent(q));
     let h = r.low_confidence ? '<div class="warn">No strong match in the repos; these are the closest passages.</div>' : "";
     for (const p of r.passages) {
       h += `<div class="passage"><div class="meta mono"><a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.repo)}/${esc(p.file)}:${p.start_line}-${p.end_line}</a> · ${esc(p.title)} · score ${p.score}</div><pre>${esc(p.text)}</pre></div>`;
     }
-    h += `<div class="muted">BM25 over ${"repo"} passages · ${r.took_ms} ms · served by ${esc(r.served_by)}</div>`;
+    h += `<div class="muted">BM25 over the repo snapshot · ${r.took_ms} ms · served by ${esc(r.served_by)}</div>`;
     $("ans").innerHTML = h;
   } catch (e) { $("ans").innerHTML = `<div class="warn">${esc(e.message)}</div>`; }
 }
@@ -39,7 +49,7 @@ let ok = 0, failed = 0, lastLeader = null, lastTerm = null, lastVer = null, node
 function mlog(s) { const t = new Date().toLocaleTimeString(); $("mlog").insertAdjacentHTML("beforeend", `<div>[${t}] ${s}</div>`); $("mlog").scrollTop = 1e9; }
 async function poll() {
   try {
-    const r = await api("/api/v1/cluster"); ok++;
+    const r = await api("api/v1/cluster"); ok++;
     nodes = r.nodes;
     const leader = nodes.find((n) => n.role === "leader" && !n.isolated);
     const term = Math.max(...nodes.map((n) => n.term || 0));
@@ -62,7 +72,7 @@ async function poll() {
 }
 setInterval(poll, 700); poll();
 async function chaos(target) {
-  try { const r = await api("/api/v1/cluster/chaos", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({target})});
+  try { const r = await api("api/v1/cluster/chaos", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({target})});
     mlog(`<span style="color:#ff8a8a">✖ isolated ${esc(r.isolated)} for ${r.for_s}s</span>`);
   } catch (e) { mlog(`<span style="color:#f5c26b">${esc(e.message)}</span>`); }
 }
@@ -73,7 +83,7 @@ $("followerBtn").onclick = () => {
   chaos(f[Math.floor(Math.random() * f.length)].id);
 };
 $("writeBtn").onclick = async () => {
-  try { const r = await api("/api/v1/cluster/write", {method: "POST"}); mlog(`update proposed to leader ${esc(r.committed_by)} and committed`); }
+  try { const r = await api("api/v1/cluster/write", {method: "POST"}); mlog(`update proposed to leader ${esc(r.committed_by)} and committed`); }
   catch (e) { mlog(`<span style="color:#f5c26b">${esc(e.message)}</span>`); }
 };
 
@@ -97,11 +107,12 @@ function render(s) {
   }).join("\n");
   $("want").textContent = want; $("views").textContent = s.views; $("lost").textContent = want - s.views; $("torn").textContent = torn;
 }
-(async () => {
+wasmReady = (async () => {
   try {
     const go = new Go();
-    const res = await WebAssembly.instantiateStreaming(fetch("/static/racesim.wasm"), go.importObject);
+    const res = await WebAssembly.instantiateStreaming(fetch("static/app.wasm"), go.importObject);
     go.run(res.instance);
+    while (!window.goReady) await new Promise((r) => setTimeout(r, 10));
     setInterval(() => {
       if (!window.racesimStep || running) return;
       running = true;
@@ -115,7 +126,7 @@ function render(s) {
 // ---------- 04 career ----------
 async function git(cmd) {
   $("gitcmd").value = cmd; $("term1").textContent = "$ career " + cmd + "\n";
-  try { const r = await api("/api/v1/career?cmd=" + encodeURIComponent(cmd)); $("term1").textContent += r.output; }
+  try { const r = await api("api/v1/career?cmd=" + encodeURIComponent(cmd)); $("term1").textContent += r.output; }
   catch (e) { $("term1").textContent += e.message; }
 }
 $("gitf").onsubmit = (e) => { e.preventDefault(); git($("gitcmd").value); };

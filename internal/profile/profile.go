@@ -1,4 +1,6 @@
-package site
+// Package profile holds the resume content and eval board shared by the
+// server, the static GitHub Pages build and the WebAssembly module.
+package profile
 
 const gh = "https://github.com/Aravindh97"
 
@@ -29,7 +31,7 @@ var Profile = ProfileData{
 	Location: "Tiruppur, Tamil Nadu (open to Bengaluru, on-site)",
 	Email:    "aravindhvaradha@gmail.com",
 	Links: []Link{{"github.com/Aravindh97", gh}, {"LinkedIn", "https://www.linkedin.com/in/aravindh-varadharaj-253231201"},
-		{"resume.pdf", "/static/resume.pdf"}, {"/metrics", "/metrics"}, {"/api/v1/profile", "/api/v1/profile"}},
+		{"resume.pdf", "static/resume.pdf"}},
 	Projects: []Repo{
 		{"Granth", "Document ingestion and hybrid retrieval for agents", "Go, Temporal, OpenSearch, Postgres, MCP", gh + "/granth"},
 		{"Smriti", "Scoped long-term memory for LLM agents", "Go, Postgres + pgvector, Temporal, MCP", gh + "/smriti"},

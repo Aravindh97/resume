@@ -32,6 +32,7 @@ import (
 
 	"github.com/Aravindh97/resume/internal/ask"
 	"github.com/Aravindh97/resume/internal/career"
+	"github.com/Aravindh97/resume/internal/profile"
 	"github.com/Aravindh97/resume/internal/raft"
 )
 
@@ -304,10 +305,10 @@ func (s *Server) publicHandler() http.Handler {
 	mux.HandleFunc("GET /{$}", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		s.tmpl.ExecuteTemplate(w, "index.html", map[string]any{"Node": s.cfg.ID, "Region": s.cfg.Region,
-			"Evals": Evals, "Profile": Profile})
+			"Evals": profile.Evals, "Profile": profile.Profile, "Static": false})
 	})
-	mux.HandleFunc("GET /api/v1/profile", func(w http.ResponseWriter, r *http.Request) { writeJSON(w, 200, Profile) })
-	mux.HandleFunc("GET /api/v1/evals", func(w http.ResponseWriter, r *http.Request) { writeJSON(w, 200, Evals) })
+	mux.HandleFunc("GET /api/v1/profile", func(w http.ResponseWriter, r *http.Request) { writeJSON(w, 200, profile.Profile) })
+	mux.HandleFunc("GET /api/v1/evals", func(w http.ResponseWriter, r *http.Request) { writeJSON(w, 200, profile.Evals) })
 	mux.HandleFunc("GET /api/v1/ask", func(w http.ResponseWriter, r *http.Request) {
 		q := r.URL.Query().Get("q")
 		if len(q) < 3 || len(q) > 300 {

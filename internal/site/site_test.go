@@ -35,7 +35,7 @@ func TestPublicRoutes(t *testing.T) {
 	if w := get("/api/v1/career?cmd=init+/tmp/x"); w.Code != 400 {
 		t.Fatal("career init must not run on the server")
 	}
-	if w := get("/static/racesim.wasm"); w.Code != 200 || w.Header().Get("Content-Type") != "application/wasm" {
+	if w := get("/static/app.wasm"); w.Code != 200 || w.Header().Get("Content-Type") != "application/wasm" {
 		t.Fatalf("wasm: %d %s", w.Code, w.Header().Get("Content-Type"))
 	}
 	// Raft RPCs exist only on the private listener.

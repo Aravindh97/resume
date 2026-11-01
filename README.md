@@ -68,7 +68,18 @@ Scope: state is in memory, membership is fixed, and there's no log compaction. T
 - The safe modes are tested under `-race`.
 - The unsafe mode is a deliberate data race. `-race` would rightly reject it, so its test is built with `!race`, runs single-threaded like the browser, and passed 300 of 300 runs.
 
-## Deploy (Fly.io)
+## Free hosting: GitHub Pages
+
+The whole site also runs with no server. `make static` builds `dist/`. In that build, the Go WebAssembly module answers the same `/api/v1/*` routes inside the visitor's tab:
+- search over the embedded repo snapshot
+- the career CLI
+- four real `internal/raft` nodes over an in-memory network ([`internal/browsermesh`](internal/browsermesh/mesh.go))
+
+[`.github/workflows/pages.yml`](.github/workflows/pages.yml) builds and publishes it on every push to `main`. One-time setup: in the repo's **Settings → Pages**, set **Source** to **GitHub Actions**. The site is then at `https://aravindh97.github.io/resume/`.
+
+The trade-off: on Pages the nodes share one tab, so the "network" is simulated. The multi-region version is the Fly.io deploy below, with the same Raft code over real HTTP.
+
+## Deploy (Fly.io, paid)
 
 ```bash
 fly auth login
