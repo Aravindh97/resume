@@ -75,7 +75,7 @@ fly auth login
 PREFIX=aravindh-resume ./deploy/fly-deploy.sh   # 4 apps: bom, sin, fra, ams
 ```
 
-Each app exposes only port 8080 through Fly's HTTPS proxy. Raft runs on `fly-local-6pn:9080`, using `<app>.internal` names on the organisation's private network. This deploy path hasn't been run yet, because it needs your Fly account.
+Each app exposes only port 8080 through Fly's HTTPS proxy. Raft runs on `fly-local-6pn:9080`, using `<app>.internal` names on the organisation's private network. On Windows, run the script from Git Bash.
 
 ## Layout
 

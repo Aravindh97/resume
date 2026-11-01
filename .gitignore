@@ -1,4 +1,4 @@
 .mesh/
 *.log
 bin/
-deploy/fly.*.toml
+fly.*.toml
