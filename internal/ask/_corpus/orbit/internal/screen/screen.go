@@ -84,8 +84,38 @@ func Shell(meanMotion, ecc float64) (perigee, apogee float64) {
 
 type cellKey struct{ x, y, z int32 }
 
+// relevant keeps the primaries and only the objects whose altitude band can
+// reach a primary's. check() would reject every other pair anyway, so this
+// changes no result; it just stops them being propagated at every step.
+func relevant(objs []Object, c Config) []Object {
+	m := c.Threshold + slack
+	var prim []Object
+	for _, o := range objs {
+		if c.Primaries[o.ID] {
+			prim = append(prim, o)
+		}
+	}
+	var out []Object
+	for _, o := range objs {
+		if c.Primaries[o.ID] {
+			out = append(out, o)
+			continue
+		}
+		for _, p := range prim {
+			if !(p.Perigee-m > o.Apogee || o.Perigee-m > p.Apogee) {
+				out = append(out, o)
+				break
+			}
+		}
+	}
+	return out
+}
+
 func Run(objs []Object, c Config) ([]Event, Stats) {
 	t0 := time.Now()
+	if c.Primaries != nil {
+		objs = relevant(objs, c)
+	}
 	if c.Workers <= 0 {
 		c.Workers = runtime.NumCPU()
 	}
@@ -335,4 +365,43 @@ func ClosestNear(a, b Object, t time.Time, span time.Duration) (time.Time, float
 	}
 	tca, d, _ := w.refine(0, 1, bestT, 5*time.Second)
 	return tca, d
+}
+
+// Brute checks every pair at every step (refining any pair within reach)
+// and returns the closest approach under the threshold per pair. It is
+// slow and obviously correct: tests and the live demo use it to check Run.
+func Brute(objs []Object, c Config) map[[2]int]float64 {
+	w := &worker{objs: objs, c: c, sats: make([]sgp4.Satellite, len(objs))}
+	for i := range objs {
+		w.sats[i] = objs[i].Sat
+	}
+	best := map[[2]int]float64{}
+	for t := c.Start; t.Before(c.End); t = t.Add(c.Step) {
+		for i := range objs {
+			for j := i + 1; j < len(objs); j++ {
+				d, _ := w.dist(i, j, t)
+				if d < c.Threshold+maxRelSpeed*c.Step.Seconds() {
+					_, dmin, _ := w.refine(i, j, t, c.Step)
+					if dmin < c.Threshold {
+						a, b := objs[i].ID, objs[j].ID
+						if a > b {
+							a, b = b, a
+						}
+						k := [2]int{a, b}
+						if v, ok := best[k]; !ok || dmin < v {
+							best[k] = dmin
+						}
+					}
+				}
+			}
+		}
+	}
+	return best
+}
+
+// Distance returns the separation (km) of two objects at t.
+func Distance(a, b Object, t time.Time) float64 {
+	w := &worker{objs: []Object{a, b}, sats: []sgp4.Satellite{a.Sat, b.Sat}}
+	d, _ := w.dist(0, 1, t)
+	return d
 }

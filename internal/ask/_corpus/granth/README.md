@@ -1,5 +1,7 @@
 # Granth
 
+**Live demo: [aravindh97.github.io/granth](https://aravindh97.github.io/granth/)**: ask the test corpus questions and see each answer's file, page, section and rank trace, ingest your own Markdown, HTML, CSV or PDF, watch broken files get classified, run the 44-question eval, and call the MCP search tool. The Go code runs in your browser as WebAssembly; see [Live demo](#live-demo) for what differs from the full version.
+
 Document ingestion and hybrid retrieval for AI agents, in Go, built on Temporal, OpenSearch and PostgreSQL.
 
 Granth takes a folder of messy enterprise files (Markdown, HTML, text, CSV, text PDFs and scanned PDFs), runs each one through a retry-safe Temporal workflow, and indexes layout-aware chunks into OpenSearch. Agents call it through MCP tools that return passages with citations: source file, page, section path and block range.
@@ -62,7 +64,7 @@ The corpus is 9 documents for a fictional textile company, in Markdown, HTML, CS
 |---|---|---|---|---|---|---|
 | in-memory | lexical | 0.909 | 0.977 | 0.943 | 0.955 | 56 µs |
 | in-memory | vector | 0.886 | 0.955 | 0.917 | 0.909 | 28 µs |
-| in-memory | **hybrid** | **0.932** | 0.977 | **0.953** | 0.955 | 66 µs |
+| in-memory | **hybrid** | **0.909** | 0.977 | **0.942** | 0.955 | 69 µs |
 | OpenSearch 2.17 | lexical | 0.841 | 0.955 | 0.891 | 0.864 | 5.6 ms |
 | OpenSearch 2.17 | vector | 0.886 | 0.955 | 0.917 | 0.909 | 5.7 ms |
 | OpenSearch 2.17 | **hybrid** | **0.886** | **0.977** | **0.925** | **0.909** | 5.4 ms |
@@ -73,6 +75,8 @@ Full output with a trace for every miss: [`docs/eval-memory.txt`](docs/eval-memo
 - **q44** ("what should dyeing unit workers wear") misses in every mode. The answer is only in the Tamil document. BM25 can't match across languages, and the hashing embedder isn't semantic. Fixing it needs a multilingual embedding model (set `EMBED_URL` to one, such as multilingual-e5).
 - **q16** ("rotate my password every 90 days?") misses in OpenSearch lexical mode, because the answer says "not on a fixed schedule" and shares almost no words with the question. Hybrid recovers it.
 - **q17** ("Which systems need MFA?") misses in vector mode, because "MFA" never appears in the text. BM25 finds it through "authentication". Hybrid recovers it.
+
+**A bug the live demo found:** when two results have the same fused score (rank 1 + 2 and rank 2 + 1 fuse to the same value), the original code broke the tie by chunk id. Chunk ids are hashes that include the file path, so the in-memory hybrid hit@1 depended on which directory the repo was checked out in (0.932 here, 0.886 in the browser). Ties now go to the better single-retriever rank, then source, page and position, with a test that two different paths give the same order. The OpenSearch numbers didn't change; the in-memory hybrid row above is the corrected one.
 
 **How to read these numbers:** the corpus is small, so absolute scores are high. The harness is for comparing changes on the same question set: chunking, analyzers, fusion constants or a real embedding model. Add questions to `testdata/eval/questions.jsonl` as you find failures.
 
@@ -87,6 +91,14 @@ These came from a run against the local Docker stack:
   2. The `IndexChunks` activity kept retrying with backoff. It had reached attempt 7 after 60 s.
   3. After `docker start`, the workflow finished with `indexed` and the document became searchable.
   4. No duplicate chunks were created.
+
+## Live demo
+
+The page at https://aravindh97.github.io/granth/ is this repo's Go code compiled to WebAssembly (`cmd/web`), with a plain HTML/JS frontend in `web/`. `.github/workflows/pages.yml` builds and publishes it on every push. GitHub Pages only serves static files, so anything that needs a database or a server runs against in-memory versions in the browser; the numbers in this README come from the full version.
+
+```bash
+./web/build.sh dist && python3 -m http.server -d dist 8000   # http://127.0.0.1:8000
+```
 
 ## Run it
 

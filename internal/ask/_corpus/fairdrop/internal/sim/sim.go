@@ -23,6 +23,15 @@ import (
 	"github.com/Aravindh97/fairdrop/internal/store"
 )
 
+// Booker is what the simulator drives: the Postgres store in the load
+// test, the in-memory store in the browser demo.
+type Booker interface {
+	HoldBest(ctx context.Context, show, buyer string, n int, together bool) (*store.Hold, error)
+	Confirm(ctx context.Context, holdID, buyer, key string, pay store.Payer, price int) (*store.Result, error)
+	NaiveBook(ctx context.Context, show, buyer string, n int) ([]string, error)
+	Audit(ctx context.Context, show string) (*store.Audit, error)
+}
+
 type Config struct {
 	Show        string
 	Buyers      int
@@ -97,7 +106,7 @@ func pct(d []time.Duration, p float64) time.Duration {
 	return d[min(len(d)-1, int(float64(len(d))*p))]
 }
 
-func Run(ctx context.Context, s *store.Store, cfg Config) (*Report, error) {
+func Run(ctx context.Context, s Booker, cfg Config) (*Report, error) {
 	r := &Report{Mode: "safe", Buyers: cfg.Buyers, Concurrency: cfg.Concurrency}
 	if cfg.Naive {
 		r.Mode = "naive"

@@ -66,6 +66,11 @@ func LoadReadings(path string) ([]Reading, int, error) {
 		return nil, 0, err
 	}
 	defer r.Close()
+	return ReadReadings(r)
+}
+
+// ReadReadings parses the readings CSV (already decompressed).
+func ReadReadings(r io.Reader) ([]Reading, int, error) {
 	cr := csv.NewReader(r)
 	cr.ReuseRecord = true
 	if _, err := cr.Read(); err != nil {
@@ -102,6 +107,10 @@ func LoadReference(path string) (map[string]map[time.Time]Ref, error) {
 		return nil, err
 	}
 	defer r.Close()
+	return ReadReference(r)
+}
+
+func ReadReference(r io.Reader) (map[string]map[time.Time]Ref, error) {
 	recs, err := csv.NewReader(r).ReadAll()
 	if err != nil {
 		return nil, err
@@ -132,6 +141,10 @@ func LoadHumidity(path string) (map[time.Time]float64, error) {
 	if err != nil {
 		return nil, err
 	}
+	return ParseHumidity(b)
+}
+
+func ParseHumidity(b []byte) (map[time.Time]float64, error) {
 	var r struct {
 		Hourly struct {
 			Time []string  `json:"time"`
@@ -159,6 +172,10 @@ func LoadSensors(path string) ([]Sensor, error) {
 	if err != nil {
 		return nil, err
 	}
+	return ParseSensors(b)
+}
+
+func ParseSensors(b []byte) ([]Sensor, error) {
 	var s []Sensor
 	return s, json.Unmarshal(b, &s)
 }

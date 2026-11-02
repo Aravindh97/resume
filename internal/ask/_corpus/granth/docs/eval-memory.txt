@@ -1,9 +1,9 @@
 embedder=hashing-384 index=*index.Memory questions=44
 
 mode        n   hit@1   hit@5  mrr@10   cite@1       p50       p95
-lexical    44   0.909   0.977   0.943    0.955      56µs     228µs
-vector     44   0.886   0.955   0.917    0.909      28µs      55µs
-hybrid     44   0.932   0.977   0.953    0.955      66µs     283µs
+lexical    44   0.909   0.977   0.943    0.955      62µs     196µs
+vector     44   0.886   0.955   0.917    0.909      31µs     138µs
+hybrid     44   0.909   0.977   0.942    0.955      80µs     288µs
 
 [lexical] MISS q44 "what should dyeing unit workers wear" (want safety-tamil.md: "கையுறைகள்")
    #1 product-catalog.csv lex=1 vec=0 fused=0.0164  "SKU | Product | Fabric | GSM | Price per unit (INR) | Minimum order qu"

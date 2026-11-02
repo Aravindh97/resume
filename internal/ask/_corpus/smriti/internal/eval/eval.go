@@ -84,9 +84,9 @@ func contains(s, sub string) bool {
 
 func tokens(s string) float64 { return float64(len(s)) / 4 }
 
-func Run(ctx context.Context, st *store.Store, sc *Scenario, runID string) (*Report, error) {
+func Run(ctx context.Context, st store.Memories, sc *Scenario, runID string) (*Report, error) {
 	org := sc.Org + "-" + runID
-	st.Now = func() time.Time { return sc.Now }
+	st.SetClock(func() time.Time { return sc.Now })
 	principals := map[string]memory.Principal{}
 	writers := map[string]bool{}
 	for _, w := range sc.OrgWriters {
@@ -146,7 +146,7 @@ func Run(ctx context.Context, st *store.Store, sc *Scenario, runID string) (*Rep
 		}
 	}
 
-	emb := st.Embedder
+	emb := st.Embeds()
 	for _, q := range sc.Questions {
 		p := principals[q.User]
 		row := Row{ID: q.ID, User: q.User, Query: q.Query}

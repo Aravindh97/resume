@@ -6,6 +6,7 @@ package search
 
 import (
 	"context"
+	"path"
 	"sort"
 	"strings"
 	"sync"
@@ -128,11 +129,35 @@ func (s *Searcher) Search(ctx context.Context, r Request) (*Response, error) {
 	for _, c := range byID {
 		cands = append(cands, c)
 	}
-	sort.Slice(cands, func(i, j int) bool {
-		if cands[i].t.Fused != cands[j].t.Fused {
-			return cands[i].t.Fused > cands[j].t.Fused
+	// Ties in the fused score are common (ranks 1+2 and 2+1 fuse to the same
+	// value). Break them by the better single-retriever rank, then by
+	// source, page and chunk position, so the order never depends on chunk
+	// ids, which are hashes of the file path.
+	best := func(t Trace) int {
+		b := 1 << 30
+		for _, r := range []int{t.LexicalRank, t.VectorRank} {
+			if r > 0 && r < b {
+				b = r
+			}
 		}
-		return cands[i].c.ID < cands[j].c.ID
+		return b
+	}
+	sort.Slice(cands, func(i, j int) bool {
+		a, b := cands[i], cands[j]
+		if a.t.Fused != b.t.Fused {
+			return a.t.Fused > b.t.Fused
+		}
+		if best(a.t) != best(b.t) {
+			return best(a.t) < best(b.t)
+		}
+		if a.t.LexicalRank != b.t.LexicalRank {
+			return a.t.LexicalRank != 0 && (b.t.LexicalRank == 0 || a.t.LexicalRank < b.t.LexicalRank)
+		}
+		ca, cb := a.c.Citation, b.c.Citation
+		if path.Base(ca.SourceURI) != path.Base(cb.SourceURI) {
+			return path.Base(ca.SourceURI) < path.Base(cb.SourceURI)
+		}
+		return a.c.Ordinal < b.c.Ordinal
 	})
 
 	resp := &Response{}

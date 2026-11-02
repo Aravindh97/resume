@@ -103,3 +103,28 @@ func TestTokenBudget(t *testing.T) {
 		t.Fatalf("truncated=%v total=%d", resp.Truncated, total)
 	}
 }
+
+func TestOrderDoesNotDependOnPaths(t *testing.T) {
+	e := embed.NewHashing(128)
+	build := func(prefix string) []string {
+		ix := index.NewMemory()
+		for i, txt := range []string{"hotel limit tier 1 cities", "hotel booking travel desk", "daily allowance hotel"} {
+			id := prefix + "/doc" + string(rune('a'+i))
+			v, _ := e.Embed(context.Background(), []string{txt})
+			ix.ReplaceDoc(context.Background(), id, "h", []doc.Chunk{{ID: doc.ChunkID(id, "h", 0), DocID: id, DocHash: "h", Text: txt,
+				Embedding: v[0], Citation: doc.Citation{SourceURI: id + ".md"}}})
+		}
+		r, _ := New(ix, e).Search(context.Background(), Request{Query: "hotel", K: 3})
+		var out []string
+		for _, x := range r.Results {
+			out = append(out, x.Snippet)
+		}
+		return out
+	}
+	a, b := build("/home/me/corpus"), build("/runner/work/x")
+	for i := range a {
+		if a[i] != b[i] {
+			t.Fatalf("order depends on path: %v vs %v", a, b)
+		}
+	}
+}

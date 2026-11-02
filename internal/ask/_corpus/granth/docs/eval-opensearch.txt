@@ -1,9 +1,9 @@
 embedder=hashing-384 index=*index.OpenSearch questions=44
 
 mode        n   hit@1   hit@5  mrr@10   cite@1       p50       p95
-lexical    44   0.841   0.955   0.891    0.864    3.86ms   4.597ms
-vector     44   0.886   0.955   0.917    0.909   4.576ms   5.664ms
-hybrid     44   0.886   0.977   0.925    0.909   4.885ms   7.231ms
+lexical    44   0.841   0.955   0.891    0.864   6.325ms  10.643ms
+vector     44   0.886   0.955   0.917    0.909   5.729ms    8.01ms
+hybrid     44   0.886   0.977   0.925    0.909   5.529ms    7.16ms
 
 [lexical] MISS q16 "Do I have to rotate my password every 90 days?" (want infosec-policy.md: "not on a fixed schedule")
    #1 it-helpdesk-faq.txt lex=1 vec=0 fused=0.0164  "IT Helpdesk FAQ How do I reset my password? Go to the self-service por"

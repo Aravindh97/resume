@@ -23,37 +23,7 @@ func load(t *testing.T) []Object {
 	return objs
 }
 
-// brute checks every pair at a fine step and refines; slow, only for a
-// small sample, but obviously correct.
-func brute(objs []Object, c Config) map[[2]int]float64 {
-	w := &worker{objs: objs, c: c}
-	w.sats = make([]sgp4.Satellite, len(objs))
-	for i := range objs {
-		w.sats[i] = objs[i].Sat
-	}
-	best := map[[2]int]float64{}
-	for t := c.Start; t.Before(c.End); t = t.Add(c.Step) {
-		for i := range objs {
-			for j := i + 1; j < len(objs); j++ {
-				d, _ := w.dist(i, j, t)
-				if d < c.Threshold+maxRelSpeed*c.Step.Seconds() {
-					_, dmin, _ := w.refine(i, j, t, c.Step)
-					if dmin < c.Threshold {
-						a, b := objs[i].ID, objs[j].ID
-						if a > b {
-							a, b = b, a
-						}
-						k := [2]int{a, b}
-						if v, ok := best[k]; !ok || dmin < v {
-							best[k] = dmin
-						}
-					}
-				}
-			}
-		}
-	}
-	return best
-}
+func brute(objs []Object, c Config) map[[2]int]float64 { return Brute(objs, c) }
 
 func TestScreenMatchesBruteForce(t *testing.T) {
 	objs := load(t)

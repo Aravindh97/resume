@@ -20,6 +20,15 @@
 
 <main>
   <section class="card wide">
+    <h2><b>00</b> · Projects you can use right now</h2>
+    <table>
+      <tr><th>Project</th><th>What it does</th><th>Stack</th><th></th></tr>
+      {{range .Profile.Projects}}{{if .Live}}<tr><td><b>{{.Name}}</b></td><td>{{.What}}</td><td class="muted">{{.Stack}}</td><td class="mono"><a href="{{.Live}}">live demo</a> · <a href="{{.URL}}">code</a></td></tr>{{end}}{{end}}
+    </table>
+    <div class="muted">Each demo is the repo's own Go code compiled to WebAssembly, running in your browser. Where the full system uses Postgres, OpenSearch or Temporal, the demo uses an in-memory store with the same rules, and the README reports the numbers measured against the real services.</div>
+  </section>
+
+  <section class="card wide">
     <h2><b>01</b> · Ask my work: search over the source of my project repos, every answer cited</h2>
     <form id="askf" class="ask"><input id="q" maxlength="300" placeholder="Ask about Granth, Smriti, Sutra, fairdrop, paisa, orbit, relief, aqcal or foodwatch…"><button>Ask</button></form>
     <div class="chips" id="chips"></div>

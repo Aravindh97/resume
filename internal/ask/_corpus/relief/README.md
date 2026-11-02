@@ -1,5 +1,7 @@
 # relief
 
+**Live demo: [aravindh97.github.io/relief](https://aravindh97.github.io/relief/)**: cut the network between three devices, change stock and needs on both sides, reconnect and watch them merge; run the randomised partition test in your tab. The Go code runs in your browser as WebAssembly; see [Live demo](#live-demo) for what differs from the full version.
+
 Offline-first data sync for disaster relief teams, in Go with no dependencies.
 
 After a cyclone or flood, camps and supply trucks can go days without a network. Teams keep recording what came in, what was handed out, who needs what, and each camp's status. When devices meet again, over a local hotspot, a USB stick, or a phone carried between camps, their records have to merge **without losing anyone's changes**. The usual approach, "the newest copy of the sheet wins", silently drops the other side's work.
@@ -54,6 +56,14 @@ The three rules are checked against an oracle built from every change ever made 
 - The replica is one JSON file. It's written to a temp file and then renamed, so a crash leaves either the old file or the new one, never half of each.
 - A lock file stops two processes from writing at once.
 - Bundles carry a sha256 checksum, so a truncated or damaged file is refused.
+
+## Live demo
+
+The page at https://aravindh97.github.io/relief/ is this repo's Go code compiled to WebAssembly (`cmd/web`), with a plain HTML/JS frontend in `web/`. `.github/workflows/pages.yml` builds and publishes it on every push. GitHub Pages only serves static files, so anything that needs a database or a server runs against in-memory versions in the browser; the numbers in this README come from the full version.
+
+```bash
+./web/build.sh dist && python3 -m http.server -d dist 8000   # http://127.0.0.1:8000
+```
 
 ## Run it
 

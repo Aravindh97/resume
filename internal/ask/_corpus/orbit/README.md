@@ -1,5 +1,7 @@
 # orbit
 
+**Live demo: [aravindh97.github.io/orbit](https://aravindh97.github.io/orbit/)**: pick any satellite in the 16,763-object public catalogue, screen it for close approaches, see them on its ground track, and check the screener against brute force in your tab. The Go code runs in your browser as WebAssembly; see [Live demo](#live-demo) for what differs from the full version.
+
 A satellite conjunction screener in Go: it finds when two objects in orbit will pass within a few kilometres of each other. You can screen your own satellites against the whole public catalogue, or screen every pair.
 
 Commercial collision-warning services are expensive. Student and startup satellite teams usually rely on free alerts, which are noisy and come late. This is an open, fast screener that runs on a laptop from CelesTrak's public data.
@@ -40,7 +42,15 @@ Comparing every pair at every step means 140 million pairs per step for this cat
 
 The time window is split into slices that run in parallel, about four per core to balance load. Each worker has its own copy of every satellite, because the SGP4 code keeps state on the satellite struct. Detections of the same encounter from neighbouring steps are merged. A pair that stays close for more than 10 minutes, such as docked modules or formation flyers, is reported once and marked **co-orbiting**, not reported thousands of times.
 
-**SGP4.** The code is vendored from [go-satellite](https://github.com/joshuaferrara/go-satellite) (BSD-2). I fixed one bug: upstream truncated each TLE's epoch to whole seconds. Measured on 2,000 debris objects, that put positions a median 3.6 km and up to 7.5 km off. After the fix it matches the reference to 1 mm. I also added an API that returns errors and never panics on a bad TLE.
+**SGP4.** The code is vendored from [go-satellite](https://github.com/joshuaferrara/go-satellite) (BSD-2). I fixed one bug: upstream truncated each TLE's epoch to whole seconds. Measured on 2,000 debris objects, that put positions a median 3.6 km and up to 7.5 km off. After the fix it matches the reference to 1 mm. I also added an API that returns errors and never panics on a bad TLE. Building the ground-track map for the live demo turned up a second upstream bug: `LatLongDeg` mapped 190° to 170° instead of −170°, mirroring the eastern half of every track, and called `log.Fatal` on an out-of-range latitude. Both are fixed and tested.
+
+## Live demo
+
+The page at https://aravindh97.github.io/orbit/ is this repo's Go code compiled to WebAssembly (`cmd/web`), with a plain HTML/JS frontend in `web/`. `.github/workflows/pages.yml` builds and publishes it on every push. GitHub Pages only serves static files, so anything that needs a database or a server runs against in-memory versions in the browser; the numbers in this README come from the full version.
+
+```bash
+./web/build.sh dist && python3 -m http.server -d dist 8000   # http://127.0.0.1:8000
+```
 
 ## Run it
 

@@ -22,7 +22,11 @@ type Repo struct {
 	What  string `json:"what"`
 	Stack string `json:"stack"`
 	URL   string `json:"url"`
+	Live  string `json:"live,omitempty"` // in-browser demo on GitHub Pages
 }
+
+// pages is where each repo's in-browser demo is published.
+const pages = "https://aravindh97.github.io"
 
 var Profile = ProfileData{
 	Name:     "Aravindh Varadharaj",
@@ -33,16 +37,16 @@ var Profile = ProfileData{
 	Links: []Link{{"github.com/Aravindh97", gh}, {"LinkedIn", "https://www.linkedin.com/in/aravindh-varadharaj-253231201"},
 		{"resume.pdf", "static/resume.pdf"}},
 	Projects: []Repo{
-		{"Granth", "Document ingestion and hybrid retrieval for agents", "Go, Temporal, OpenSearch, Postgres, MCP", gh + "/granth"},
-		{"Smriti", "Scoped long-term memory for LLM agents", "Go, Postgres + pgvector, Temporal, MCP", gh + "/smriti"},
-		{"Sutra", "Enterprise connectors, ontology and entity resolution", "Go, Postgres CDC, REST, MCP", gh + "/sutra"},
-		{"fairdrop", "Ticketing for high-demand releases with a verifiable queue", "Go, PostgreSQL, drand", gh + "/fairdrop"},
-		{"paisa", "Exactly-once double-entry ledger with settlement reconciliation", "Go, PostgreSQL", gh + "/paisa"},
-		{"orbit", "Satellite conjunction screener for the public catalogue", "Go, SGP4", gh + "/orbit"},
-		{"relief", "Offline-first sync for disaster relief teams", "Go, CRDTs", gh + "/relief"},
-		{"aqcal", "Low-cost air sensor calibration and fault detection", "Go streaming pipeline", gh + "/aqcal"},
-		{"foodwatch", "Food-stress early warning backtested against IPC", "Go, CHIRPS, WFP", gh + "/foodwatch"},
-		{"Resume", "This site: Raft mesh, Go WASM race simulator, git-native career", "Go, WebAssembly", gh + "/resume"},
+		{"Granth", "Document ingestion and hybrid retrieval for agents", "Go, Temporal, OpenSearch, Postgres, MCP", gh + "/granth", pages + "/granth/"},
+		{"Smriti", "Scoped long-term memory for LLM agents", "Go, Postgres + pgvector, Temporal, MCP", gh + "/smriti", pages + "/smriti/"},
+		{"Sutra", "Enterprise connectors, ontology and entity resolution", "Go, Postgres CDC, REST, MCP", gh + "/sutra", pages + "/sutra/"},
+		{"fairdrop", "Ticketing for high-demand releases with a verifiable queue", "Go, PostgreSQL, drand", gh + "/fairdrop", pages + "/fairdrop/"},
+		{"paisa", "Exactly-once double-entry ledger with settlement reconciliation", "Go, PostgreSQL", gh + "/paisa", pages + "/paisa/"},
+		{"orbit", "Satellite conjunction screener for the public catalogue", "Go, SGP4", gh + "/orbit", pages + "/orbit/"},
+		{"relief", "Offline-first sync for disaster relief teams", "Go, CRDTs", gh + "/relief", pages + "/relief/"},
+		{"aqcal", "Low-cost air sensor calibration and fault detection", "Go streaming pipeline", gh + "/aqcal", pages + "/aqcal/"},
+		{"foodwatch", "Food-stress early warning backtested against IPC", "Go, CHIRPS, WFP", gh + "/foodwatch", pages + "/foodwatch/"},
+		{"Resume", "This site: Raft mesh, Go WASM race simulator, git-native career", "Go, WebAssembly", gh + "/resume", ""},
 	},
 	Summary: []string{
 		"Builder at Amazon since 2021 (digital marketing, then automating my team's workflows).",

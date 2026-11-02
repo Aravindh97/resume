@@ -68,7 +68,13 @@ func LoadPrices(path string) ([]Price, error) {
 		return nil, err
 	}
 	defer f.Close()
-	r := csv.NewReader(f)
+	return ReadPrices(f)
+}
+
+// ReadPrices parses the WFP CSV from any reader (a file, or bytes embedded
+// in the browser build).
+func ReadPrices(in io.Reader) ([]Price, error) {
+	r := csv.NewReader(in)
 	hdr, err := r.Read()
 	if err != nil {
 		return nil, err
@@ -112,6 +118,10 @@ func LoadRain(path string) (map[string]map[Month]float64, error) {
 	if err != nil {
 		return nil, err
 	}
+	return ParseRain(b)
+}
+
+func ParseRain(b []byte) (map[string]map[Month]float64, error) {
 	var raw map[string]map[string]float64
 	if err := json.Unmarshal(b, &raw); err != nil {
 		return nil, err
@@ -149,7 +159,11 @@ func LoadIPC(path string) ([]IPC, error) {
 		return nil, err
 	}
 	defer f.Close()
-	rs, err := csv.NewReader(f).ReadAll()
+	return ReadIPC(f)
+}
+
+func ReadIPC(in io.Reader) ([]IPC, error) {
+	rs, err := csv.NewReader(in).ReadAll()
 	if err != nil {
 		return nil, err
 	}

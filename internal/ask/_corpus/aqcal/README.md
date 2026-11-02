@@ -1,5 +1,7 @@
 # aqcal
 
+**Live demo: [aravindh97.github.io/aqcal](https://aravindh97.github.io/aqcal/)**: pick any of the 20 Berlin sensors to see raw, calibrated and reference PM2.5, then break it (stuck, saturated, offline, spike, drift) and watch the streaming detector catch it. The Go code runs in your browser as WebAssembly; see [Live demo](#live-demo) for what differs from the full version.
+
 Calibration and fault detection for low-cost air-quality sensors, written as a streaming pipeline in Go.
 
 Community-run air-quality sensors cost about €30 and cover whole cities, but they drift, get stuck, saturate, and disagree with official stations. So their readings tend to get ignored. `aqcal` does three things:
@@ -85,6 +87,14 @@ source ─► aggregators (sharded by sensor id) ─► detector + calibrator �
 | drift | the sensor's 72-hour gain against its reference has moved more than 1.5× from its training gain, relative to the typical change across all sensors, for 24 hours in a row | Real gains wander with weather, and a city-wide change isn't one sensor drifting. The first version, without the "relative to others" and "24 hours" parts, raised 7 drift alerts on clean data; this version raises 1. |
 
 **Timezones.** UBA timestamps are CET all year, without daylight saving. This was checked by correlation rather than assumed. The median correlation between sensors and reference peaks at shift 0 h (r = 0.886) after converting CET to UTC, and at +1 h without the conversion.
+
+## Live demo
+
+The page at https://aravindh97.github.io/aqcal/ is this repo's Go code compiled to WebAssembly (`cmd/web`), with a plain HTML/JS frontend in `web/`. `.github/workflows/pages.yml` builds and publishes it on every push. GitHub Pages only serves static files, so anything that needs a database or a server runs against in-memory versions in the browser; the numbers in this README come from the full version.
+
+```bash
+./web/build.sh dist && python3 -m http.server -d dist 8000   # http://127.0.0.1:8000
+```
 
 ## Run it
 

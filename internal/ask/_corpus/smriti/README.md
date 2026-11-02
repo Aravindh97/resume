@@ -1,5 +1,7 @@
 # Smriti
 
+**Live demo: [aravindh97.github.io/smriti](https://aravindh97.github.io/smriti/)**: chat as a user and watch facts get added, replaced or denied; ask what the agent would recall now or on a past date; try to read another team's memories; run the eval against raw chat history. The Go code runs in your browser as WebAssembly; see [Live demo](#live-demo) for what differs from the full version.
+
 Long-term memory for LLM agents, in Go, on PostgreSQL + pgvector and Temporal.
 
 Smriti remembers what users say about themselves, their team and their organisation across sessions. When a fact changes, the new value replaces the old one instead of piling up next to it. The old value is kept as history, with its source message, so an agent can answer two kinds of question: "what is true now" and "what did we believe in February".
@@ -72,6 +74,14 @@ Per-question output: [`docs/eval.txt`](docs/eval.txt).
 **What this shows.** The baseline's errors are mostly stale answers: it returns "My manager is Priya" after the manager changed. It also misses team and org facts, because they were said by someone else. Smriti returns the current value, keeps team and org knowledge shared, rejects the unauthorised org write, leaks nothing across users or teams, and replaying every session changes nothing.
 
 **What it does not show.** The eval uses the rule-based extractor on a scenario written in the phrasing those rules recognise. It tests reconciliation, temporal validity, access control and ranking. It does not test extraction quality. Measuring extraction needs a run with `SMRITI_LLM_URL` set and a larger, more varied conversation set, which is the next step. The baseline is also deliberately simple.
+
+## Live demo
+
+The page at https://aravindh97.github.io/smriti/ is this repo's Go code compiled to WebAssembly (`cmd/web`), with a plain HTML/JS frontend in `web/`. `.github/workflows/pages.yml` builds and publishes it on every push. GitHub Pages only serves static files, so anything that needs a database or a server runs against in-memory versions in the browser; the numbers in this README come from the full version.
+
+```bash
+./web/build.sh dist && python3 -m http.server -d dist 8000   # http://127.0.0.1:8000
+```
 
 ## Run it
 

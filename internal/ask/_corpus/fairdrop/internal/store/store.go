@@ -1,3 +1,5 @@
+//go:build !(js && wasm)
+
 // Package store keeps seats, holds and bookings in PostgreSQL.
 //
 // The guarantees, and what provides each one:
@@ -15,11 +17,8 @@ package store
 
 import (
 	"context"
-	"crypto/rand"
-	"encoding/hex"
 	"errors"
 	"fmt"
-	"sort"
 	"time"
 
 	"github.com/jackc/pgx/v5"
@@ -120,34 +119,6 @@ func (s *Store) CreateShow(ctx context.Context, show string, rows, perRow int) e
 	return tx.Commit(ctx)
 }
 
-func rowLabel(i int) string {
-	s := ""
-	for i++; i > 0; i = (i - 1) / 26 {
-		s = string(rune('A'+(i-1)%26)) + s
-	}
-	return s
-}
-
-var (
-	ErrUnavailable = errors.New("seats no longer available")
-	ErrNoBlock     = errors.New("no block of adjacent seats that size is left")
-	ErrHoldExpired = errors.New("hold expired")
-	ErrNotYours    = errors.New("hold belongs to another buyer")
-	ErrSoldOut     = errors.New("sold out")
-)
-
-type Hold struct {
-	ID      string    `json:"hold_id"`
-	Seats   []string  `json:"seats"`
-	Expires time.Time `json:"expires_at"`
-}
-
-func newID(prefix string) string {
-	b := make([]byte, 9)
-	rand.Read(b)
-	return prefix + "/" + hex.EncodeToString(b)
-}
-
 const claimable = `(status = 'free' OR (status = 'held' AND hold_expires < $2))`
 
 // HoldSeats claims exactly these seats or none of them.
@@ -212,7 +183,7 @@ func (s *Store) HoldBest(ctx context.Context, show, buyer string, n int, togethe
 }
 
 // available returns candidate blocks of n adjacent claimable seats (best
-// first, at most one per row segment) and all claimable seats.
+// first) and all claimable seats.
 func (s *Store) available(ctx context.Context, show string, n int) ([][]string, []string, error) {
 	rows, err := s.DB.Query(ctx, `SELECT seat_id, row_label, num FROM seats WHERE show_id=$1 AND `+claimable+`
 		ORDER BY length(row_label), row_label, num`, show, s.Now())
@@ -220,15 +191,10 @@ func (s *Store) available(ctx context.Context, show string, n int) ([][]string, 
 		return nil, nil, err
 	}
 	defer rows.Close()
-	type seat struct {
-		id  string
-		row string
-		num int
-	}
-	var all []seat
+	var all []SeatPos
 	for rows.Next() {
-		var x seat
-		if err := rows.Scan(&x.id, &x.row, &x.num); err != nil {
+		var x SeatPos
+		if err := rows.Scan(&x.ID, &x.Row, &x.Num); err != nil {
 			return nil, nil, err
 		}
 		all = append(all, x)
@@ -236,78 +202,8 @@ func (s *Store) available(ctx context.Context, show string, n int) ([][]string, 
 	if err := rows.Err(); err != nil {
 		return nil, nil, err
 	}
-	var singles []string
-	type cand struct {
-		ids   []string
-		rowIx int
-		off   float64
-	}
-	var cands []cand
-	rowIx := -1
-	prevRow := ""
-	for i := 0; i < len(all); {
-		if all[i].row != prevRow {
-			rowIx++
-			prevRow = all[i].row
-		}
-		// find a run of consecutive numbers in this row
-		j := i
-		for j+1 < len(all) && all[j+1].row == all[i].row && all[j+1].num == all[j].num+1 {
-			j++
-		}
-		run := all[i : j+1]
-		for _, x := range run {
-			singles = append(singles, x.id)
-		}
-		if len(run) >= n {
-			// the block in this run closest to the row centre (assume 1..max)
-			best, bestOff := 0, 1e9
-			centre := float64(run[0].num+run[len(run)-1].num) / 2
-			for k := 0; k+n <= len(run); k++ {
-				mid := float64(run[k].num+run[k+n-1].num) / 2
-				if off := abs(mid - centre); off < bestOff {
-					best, bestOff = k, off
-				}
-			}
-			ids := make([]string, n)
-			for k := 0; k < n; k++ {
-				ids[k] = run[best+k].id
-			}
-			cands = append(cands, cand{ids, rowIx, bestOff})
-		}
-		i = j + 1
-	}
-	sort.SliceStable(cands, func(a, b int) bool {
-		if cands[a].rowIx != cands[b].rowIx {
-			return cands[a].rowIx < cands[b].rowIx
-		}
-		return cands[a].off < cands[b].off
-	})
-	blocks := make([][]string, len(cands))
-	for i, c := range cands {
-		blocks[i] = c.ids
-	}
+	blocks, singles := Candidates(all, n)
 	return blocks, singles, nil
-}
-
-func abs(f float64) float64 {
-	if f < 0 {
-		return -f
-	}
-	return f
-}
-
-// Payer charges a buyer. It may fail, time out or succeed.
-type Payer interface {
-	Charge(ctx context.Context, idempotencyKey, buyer string, amount int) error
-	Refund(ctx context.Context, idempotencyKey string) error
-}
-
-type Result struct {
-	Outcome string   `json:"outcome"` // booked | payment_failed | expired | refunded | not_yours
-	Seats   []string `json:"seats,omitempty"`
-	Replay  bool     `json:"replay,omitempty"` // same key seen before; first result returned
-	Detail  string   `json:"detail,omitempty"`
 }
 
 // Confirm pays for a hold and books its seats. Calling it again with the same
@@ -386,15 +282,6 @@ func (s *Store) Confirm(ctx context.Context, holdID, buyer, key string, pay Paye
 		return nil, err
 	}
 	return &Result{Outcome: "booked", Seats: seats}, nil
-}
-
-func showOf(holdID string) string {
-	for i := 0; i < len(holdID); i++ {
-		if holdID[i] == '/' {
-			return holdID[:i]
-		}
-	}
-	return holdID
 }
 
 func joinSeats(s []string) string {
@@ -490,17 +377,6 @@ func (s *Store) NaiveBook(ctx context.Context, show, buyer string, n int) ([]str
 		}
 	}
 	return seats, nil
-}
-
-// Audit checks the invariants after a sale.
-type Audit struct {
-	Seats, Sold, Held, Free  int
-	Bookings                 int
-	DoubleSold               int // seats with more than one booking (must be 0)
-	SoldWithoutBooking       int // status sold but no booking row (must be 0)
-	BookingsOnUnsoldSeat     int // booking row but seat not sold (must be 0)
-	NaiveBookings, NaiveDupe int // naive baseline, for comparison
-	TogetherBroken           int // holds that asked for adjacency but got a gap (must be 0)
 }
 
 func (s *Store) Audit(ctx context.Context, show string) (*Audit, error) {

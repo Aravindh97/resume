@@ -1,5 +1,7 @@
 # paisa
 
+**Live demo: [aravindh97.github.io/paisa](https://aravindh97.github.io/paisa/)**: pay with idempotency keys, retry, reuse a key, crash before commit, then run a 50,000-payment chaos test and reconcile it against a broken bank file. The Go code runs in your browser as WebAssembly; see [Live demo](#live-demo) for what differs from the full version.
+
 An exactly-once, double-entry ledger with UPI-style settlement reconciliation, in Go and PostgreSQL.
 
 Payment systems fail in a few common ways:
@@ -65,6 +67,14 @@ Nothing is ever deleted. Every correction is a new entry, so the history explain
 - no payment reference booked twice
 
 It takes about 100 ms for 130,000 postings.
+
+## Live demo
+
+The page at https://aravindh97.github.io/paisa/ is this repo's Go code compiled to WebAssembly (`cmd/web`), with a plain HTML/JS frontend in `web/`. `.github/workflows/pages.yml` builds and publishes it on every push. GitHub Pages only serves static files, so anything that needs a database or a server runs against in-memory versions in the browser; the numbers in this README come from the full version.
+
+```bash
+./web/build.sh dist && python3 -m http.server -d dist 8000   # http://127.0.0.1:8000
+```
 
 ## Run it
 

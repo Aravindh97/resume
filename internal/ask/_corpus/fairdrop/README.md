@@ -1,5 +1,7 @@
 # fairdrop
 
+**Live demo: [aravindh97.github.io/fairdrop](https://aravindh97.github.io/fairdrop/)**: rush a show with up to 20,000 buyers and see that no seat is sold twice, run the naive version and watch seats sell many times over, then run a queue lottery on real drand randomness and try to rig it. The Go code runs in your browser as WebAssembly; see [Live demo](#live-demo) for what differs from the full version.
+
 Ticketing for high-demand releases (first-day film shows, cricket, concerts) in Go and PostgreSQL. It solves two problems:
 
 1. **No seat is ever sold twice**, even with tens of thousands of buyers clicking at once, payments timing out, and people double-clicking "Pay".
@@ -70,6 +72,14 @@ Tested against the real drand network:
 - Adding one entry after closing failed the commitment check.
 
 There's a 1,000-entry sale in [`docs/example-sale`](docs/example-sale) that you can verify yourself.
+
+## Live demo
+
+The page at https://aravindh97.github.io/fairdrop/ is this repo's Go code compiled to WebAssembly (`cmd/web`), with a plain HTML/JS frontend in `web/`. `.github/workflows/pages.yml` builds and publishes it on every push. GitHub Pages only serves static files, so anything that needs a database or a server runs against in-memory versions in the browser; the numbers in this README come from the full version.
+
+```bash
+./web/build.sh dist && python3 -m http.server -d dist 8000   # http://127.0.0.1:8000
+```
 
 ## Run it
 

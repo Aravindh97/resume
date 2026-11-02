@@ -75,7 +75,7 @@ type Result struct {
 
 func feeAccount(i int) string { return fmt.Sprintf("revenue:fees:%02d", i) }
 
-func Run(ctx context.Context, l *ledger.Ledger, c Config) (*Result, error) {
+func Run(ctx context.Context, l ledger.Store, c Config) (*Result, error) {
 	rng := rand.New(rand.NewPCG(c.Seed, 99))
 	accts := []ledger.Account{{ID: "bank:clearing", Kind: "asset", AllowNegative: true}, {ID: "suspense", Kind: "asset", AllowNegative: true},
 		{ID: "topups", Kind: "asset", AllowNegative: true}}

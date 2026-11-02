@@ -83,7 +83,7 @@ func TestExpiredHoldIsReclaimedAndLateConfirmRefunds(t *testing.T) {
 		t.Fatalf("expired seat not reclaimable: %v", err)
 	}
 	pay := sim.NewFakePayer()
-	r, err := s.Confirm(ctx, h.ID, "slow", "k1", pay, 100)
+	r, err := s.Confirm(ctx, h.ID, "slow", show+"/k1", pay, 100)
 	if err != nil || r.Outcome != "expired" {
 		t.Fatalf("late confirm: %+v %v", r, err)
 	}
@@ -100,7 +100,7 @@ func TestConfirmIsIdempotent(t *testing.T) {
 		wg.Add(1)
 		go func(i int) {
 			defer wg.Done()
-			r, err := s.Confirm(ctx, h.ID, "u", "same-key", pay, 100)
+			r, err := s.Confirm(ctx, h.ID, "u", show+"/same-key", pay, 100)
 			if err != nil {
 				t.Error(err)
 			}
@@ -121,7 +121,7 @@ func TestConfirmIsIdempotent(t *testing.T) {
 	if first != 1 || a.Bookings != 2 {
 		t.Fatalf("first=%d bookings=%d", first, a.Bookings)
 	}
-	if _, err := s.Confirm(ctx, h.ID, "someone-else", "other-key", pay, 100); err != nil {
+	if _, err := s.Confirm(ctx, h.ID, "someone-else", show+"/other-key", pay, 100); err != nil {
 		t.Fatal(err)
 	}
 }

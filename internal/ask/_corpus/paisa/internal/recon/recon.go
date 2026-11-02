@@ -80,35 +80,8 @@ type Report struct {
 	Fixed   map[Kind]int `json:"fixed,omitempty"`
 }
 
-type ledgerPayment struct {
-	amount   int64
-	merchant string
-}
-
-// Payments loads every payment's reference, amount and merchant. The amount
-// is what the merchant account was credited.
-func Payments(ctx context.Context, l *ledger.Ledger) (map[string]ledgerPayment, error) {
-	rows, err := l.DB.Query(ctx, `SELECT e.reference, p.amount, p.account_id FROM entries e
-		JOIN postings p ON p.entry_id = e.id
-		WHERE e.kind='payment' AND e.reference <> '' AND p.account_id LIKE 'merchant:%' AND p.amount > 0`)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	out := map[string]ledgerPayment{}
-	for rows.Next() {
-		var ref, acct string
-		var amt int64
-		if err := rows.Scan(&ref, &amt, &acct); err != nil {
-			return nil, err
-		}
-		out[ref] = ledgerPayment{amt, acct}
-	}
-	return out, rows.Err()
-}
-
-func Reconcile(ctx context.Context, l *ledger.Ledger, bank []Line) (*Report, error) {
-	led, err := Payments(ctx, l)
+func Reconcile(ctx context.Context, l ledger.Store, bank []Line) (*Report, error) {
+	led, err := l.MerchantCredits(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -117,22 +90,22 @@ func Reconcile(ctx context.Context, l *ledger.Ledger, bank []Line) (*Report, err
 	for _, b := range bank {
 		seen[b.Reference]++
 		if seen[b.Reference] > 1 {
-			rep.Breaks = append(rep.Breaks, Break{DuplicateInBank, b.Reference, b.Amount, led[b.Reference].amount, b.Merchant})
+			rep.Breaks = append(rep.Breaks, Break{DuplicateInBank, b.Reference, b.Amount, led[b.Reference].Amount, b.Merchant})
 			continue
 		}
 		p, ok := led[b.Reference]
 		switch {
 		case !ok:
 			rep.Breaks = append(rep.Breaks, Break{MissingInLedger, b.Reference, b.Amount, 0, b.Merchant})
-		case p.amount != b.Amount:
-			rep.Breaks = append(rep.Breaks, Break{AmountMismatch, b.Reference, b.Amount, p.amount, p.merchant})
+		case p.Amount != b.Amount:
+			rep.Breaks = append(rep.Breaks, Break{AmountMismatch, b.Reference, b.Amount, p.Amount, p.Merchant})
 		default:
 			rep.Matched++
 		}
 	}
 	for ref, p := range led {
 		if seen[ref] == 0 {
-			rep.Breaks = append(rep.Breaks, Break{MissingInBank, ref, 0, p.amount, p.merchant})
+			rep.Breaks = append(rep.Breaks, Break{MissingInBank, ref, 0, p.Amount, p.Merchant})
 		}
 	}
 	sort.Slice(rep.Breaks, func(i, j int) bool {
@@ -156,7 +129,7 @@ func Reconcile(ctx context.Context, l *ledger.Ledger, bank []Line) (*Report, err
 //	amount_mismatch   -> post the difference between merchant and suspense
 //	duplicate_in_bank -> book the extra settlement to suspense, to be
 //	                     returned to the bank
-func Resolve(ctx context.Context, l *ledger.Ledger, rep *Report) (map[Kind]int, error) {
+func Resolve(ctx context.Context, l ledger.Store, rep *Report) (map[Kind]int, error) {
 	fixed := map[Kind]int{}
 	for _, b := range rep.Breaks {
 		merchant := b.Merchant

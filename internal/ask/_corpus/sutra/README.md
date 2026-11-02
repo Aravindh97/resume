@@ -1,5 +1,7 @@
 # Sutra
 
+**Live demo: [aravindh97.github.io/sutra](https://aravindh97.github.io/sutra/)**: generate ERP and CRM records full of spelling variants and GST quirks, resolve them, inspect each golden record's lineage and match evidence, check GSTINs, and score accuracy against the truth. The Go code runs in your browser as WebAssembly; see [Live demo](#live-demo) for what differs from the full version.
+
 Enterprise connectors, an ontology and entity resolution in Go and PostgreSQL, so agents can work with structured records from several systems as one consistent model.
 
 Sutra streams an ERP's vendor table through Postgres logical replication (CDC) and syncs CRM accounts incrementally over a REST API. It maps both onto a YAML ontology and works out which records describe the same company, using Indian business identifiers (GSTIN with checksum, PAN, +91 phones) and transliteration-aware name matching. Every value in the resulting golden record can be traced to the source record it came from. Agents query it through read-only MCP tools.
@@ -102,6 +104,14 @@ The metric is pairwise precision, recall and F1. Full output: [`docs/eval.txt`](
 | 2,000 | 0.923 – 0.937 | 0.710 – 0.736 | 4,674 – 5,474 |
 
 **What these numbers show.** At 2,000 companies, the generator's 240 possible names spread over 7 cities, so many unrelated companies share a name and city. Precision drops to about 0.89, and the review queue grows to thousands of pairs. Records with no identifiers can't be separated in that setting. The fix is more signals (addresses, bank account hashes) and cheaper review, not lower thresholds. The data is synthetic. Real ERP and CRM exports will have failure modes the generator doesn't model.
+
+## Live demo
+
+The page at https://aravindh97.github.io/sutra/ is this repo's Go code compiled to WebAssembly (`cmd/web`), with a plain HTML/JS frontend in `web/`. `.github/workflows/pages.yml` builds and publishes it on every push. GitHub Pages only serves static files, so anything that needs a database or a server runs against in-memory versions in the browser; the numbers in this README come from the full version.
+
+```bash
+./web/build.sh dist && python3 -m http.server -d dist 8000   # http://127.0.0.1:8000
+```
 
 ## Run it
 
