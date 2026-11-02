@@ -5,10 +5,10 @@
 set -euo pipefail
 out=internal/ask/_corpus  # leading underscore: the go tool ignores it, embed uses all:
 rm -rf "$out" && mkdir -p "$out"
-for r in granth smriti sutra; do
+for r in granth smriti sutra fairdrop paisa orbit relief aqcal foodwatch; do
   src="../$r"
   [ -d "$src" ] || { echo "missing $src" >&2; exit 1; }
-  (cd "$src" && git ls-files -- '*.go' '*.md' 'docs/*.txt' 'config/*.yaml' 'docker-compose.yml') | while read -r f; do
+  (cd "$src" && git ls-files -- '*.go' '*.md' 'docs/*.txt' 'config/*.yaml' 'docker-compose.yml' ':!:internal/sgp4/*' ':!:testdata/*') | while read -r f; do
     mkdir -p "$out/$r/$(dirname "$f")"
     cp "$src/$f" "$out/$r/$f"
   done

@@ -1,0 +1,45 @@
+data: 279798 readings from 20 SDS011 sensors (0 unparseable rows), 2026-10-01 .. 2026-10-29; reference: 6 UBA stations; train before 2026-10-19
+
+1. time alignment: median over sensors of the correlation between hourly sensor medians and the reference, by shift:
+   shift -2 h: median r = 0.812
+   shift -1 h: median r = 0.863
+   shift +0 h: median r = 0.886
+   shift +1 h: median r = 0.842
+   shift +2 h: median r = 0.763
+   (UBA timestamps are CET; the loader converts them to UTC, so the peak should be at 0. Without the conversion it is at +1.)
+
+2. health check on training days only: 5 of 20 sensors unusable, excluded from calibration
+   sensor 3491   does not track reference (r=-0.07)
+   sensor 5706   does not track reference (r=0.02)
+   sensor 8562   does not track reference (r=-0.06)
+   sensor 63218  too little training data
+   sensor 84347  saturated, does not track reference (r=0.23)
+
+3. calibration on held-out days 2026-10-19 .. 2026-10-28, 15 sensors, hourly PM2.5 vs nearest reference station (≤ 1.5 km):
+   method                              hours      MAE     RMSE      R²    bias
+   raw sensor                           3516     4.81     5.98  -0.112   -4.56   (RH≥85%: MAE 5.32 over 1308 h)
+   one linear fit for all sensors       3516     3.04     4.05   0.490   +1.14   (RH≥85%: MAE 3.82 over 1308 h)
+   per-sensor linear                    3516     2.31     3.15   0.691   +1.06   (RH≥85%: MAE 2.85 over 1308 h)
+   per-sensor + humidity (κ=0.02)       3516     2.37     3.25   0.671   +1.16   (RH≥85%: MAE 2.82 over 1308 h)
+
+4. fault detection on held-out days: 15 healthy sensors, one injected fault each, 20 seed(s) from 1 (300 faults):
+   stuck      detected  60/60   median delay    2 h
+   saturated  detected  60/60   median delay    1 h
+   offline    detected  59/60   median delay    4 h
+   spike      detected  59/60   median delay    1 h
+   drift      detected  60/60   median delay  115 h
+   overall 298/300 (99.3%)
+   missed seed 6: offline on sensor 27263 from 10-21 06h (other alerts on it then: [])
+   missed seed 10: spike on sensor 95422 from 10-27 00h (other alerts on it then: [])
+   alerts on the same sensors with no injected faults: 6 over 150 sensor-days
+     10-19 04h sensor 27263 offline: no readings since 10-19 01:00  [real gap: longest in this sensor's data that day 3h56m0s]
+     10-19 21h sensor 27263 offline: no readings since 10-19 18:00  [real gap: longest in this sensor's data that day 12h50m0s]
+     10-20 11h sensor 9392 offline: no readings since 10-20 08:00  [real gap: longest in this sensor's data that day 6h6m0s]
+     10-20 23h sensor 27263 offline: no readings since 10-20 20:00  [real gap: longest in this sensor's data that day 5h54m0s]
+     10-22 11h sensor 100744 offline: no readings since 10-22 08:00  [real gap: longest in this sensor's data that day 8h33m0s]
+     10-25 14h sensor 95422 drift: gain is 1.64x its training value for 24 h; other sensors 0.64x
+
+5. throughput: held-out stream 101652 readings in 23ms (4492078 readings/s)
+   5595960 readings from 400 sensors, 1 aggregator shards: 1.18s (4740336 readings/s)
+   5595960 readings from 400 sensors, 4 aggregator shards: 903ms (6194356 readings/s)
+   5595960 readings from 400 sensors, 8 aggregator shards: 814ms (6870888 readings/s)

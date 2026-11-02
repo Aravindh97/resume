@@ -1,0 +1,10 @@
+payments=50000 workers=32 fee-shards=16 total=22.881s payment-phase=16.551s (3021 payments/s)
+booked=49814 rejected(insufficient funds)=0 injected-crashes=2502 lost-responses=2533 replays-served=5066 refunds=1484 double-refund-attempts=481
+audit after payments: entries=53298 postings=157894 unbalanced=0 cache-mismatch=0 total=0 negative=0 duplicate-refs=0 (126ms) -> OK
+recon: matched=49566
+  missing_in_ledger  planted=186  found=186
+  missing_in_bank    planted=155  found=155
+  amount_mismatch    planted=93   found=93
+  duplicate_in_bank  planted=97   found=97
+resolved: 531 breaks fixed; running resolve again applied 0 new entries
+audit after reconciliation: entries=53829 postings=158956 unbalanced=0 cache-mismatch=0 total=0 negative=0 duplicate-refs=0 (99ms) -> OK

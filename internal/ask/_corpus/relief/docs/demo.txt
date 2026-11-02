@@ -1,0 +1,26 @@
+relief serving camp2 on http://127.0.0.1:7700
+== truck visits camp 2 and syncs
+sent 0 ops (peer applied 0), received 3 new ops
+== network down: both sides keep working
+== truck hands camp 4 a USB bundle (twice: harmless)
+exported 6 ops (257 bytes est.) to usb.bundle
+imported 6 new ops from truck-laptop (0 already known)
+imported 0 new ops from truck-laptop (6 already known)
+== a damaged copy is rejected
+error: bundle is not valid JSON (damaged?): unexpected end of JSON input
+== camp 4 sends a bundle back, truck syncs again
+exported 3 ops (131 bytes est.) to back.bundle
+imported 3 new ops from camp4-tablet (0 already known)
+sent 0 ops (peer applied 0), received 2 new ops
+device camp2-phone  ops 8  state cb5291315f48eef2
+  stock  rice_kg        90
+  need   insulin camp-2
+  field  camp-2.status  evacuated
+device camp4-tablet  ops 6  state 396c9e12460d89ef
+  stock  rice_kg        150
+  need   insulin camp-2
+  field  camp-2.status  evacuated
+device truck-laptop  ops 8  state cb5291315f48eef2
+  stock  rice_kg        90
+  need   insulin camp-2
+  field  camp-2.status  evacuated

@@ -1,0 +1,2 @@
+objects=16763 steps=52560 took=3m42.117s  propagations=908671056 (4.1 M/s)  pairs checked=48022947 (0.0007% of brute force)  refined=575162  sgp4 errors=171256
+346588 close approaches under 25.0 km written to /tmp/events-mine.json

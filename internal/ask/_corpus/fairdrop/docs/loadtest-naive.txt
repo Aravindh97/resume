@@ -1,0 +1,6 @@
+mode=naive buyers=50000 concurrency=200 duration=50.943s (981 buyers/s)
+seats=2000 sold=2000 held=0 free=0
+booked=45349 buyers (158874 seats)  sold-out=4651  no-adjacent-block=0
+abandoned=0 declined=0 timeout+retry=0 double-click=0 replays-served=0 errors=0
+hold p50=210.587ms p99=382.643ms   confirm p99=0s
+NAIVE: 158874 booking rows for 2000 seats -> 156874 seats sold more than once

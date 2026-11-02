@@ -25,6 +25,8 @@ const examples = [
   "How does Smriti stop two writers creating two current facts?",
   "How does Sutra validate a GSTIN?",
   "What does the CDC connector do after a crash?",
+  "How does fairdrop stop a seat being sold twice?",
+  "How does paisa make payments exactly once?",
 ];
 for (const q of examples) {
   const b = document.createElement("button"); b.className = "ghost"; b.textContent = q;

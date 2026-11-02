@@ -1,0 +1,15 @@
+SOCRATES list: 1000 conjunctions (range up to 0.255 km); 534 with TCA in our window 2026-11-02T06:00:00Z .. 2026-11-08T08:00:00Z
+both objects in our catalog: 94 of 534 (the rest involve objects CelesTrak's public groups do not include)
+RECALL: found 34 of 94 covered conjunctions (36.2%) within ±2m0s of SOCRATES' TCA
+agreement on found ones: |min range diff| median 5.036 km, p90 19.658 km; |TCA diff| median 1.1 s, p90 5.2 s
+RECALL ON IDENTICAL ELEMENT SETS (our TLE epoch = SOCRATES' for both objects): 0 of 0 (0.0%)
+misses by reason: map[not found:12 pair found at another time:48]
+  missed 57413 x 64321 at 2026-11-05T07:15:26Z, SOCRATES 0.026 km
+  missed 45746 x 60998 at 2026-11-03T04:10:14Z, SOCRATES 0.041 km
+  missed 43160 x 65885 at 2026-11-07T18:06:24Z, SOCRATES 0.045 km
+  missed 20580 x 64934 at 2026-11-07T12:51:59Z, SOCRATES 0.054 km
+  missed 60485 x 66357 at 2026-11-07T20:38:35Z, SOCRATES 0.054 km
+  missed 56200 x 68011 at 2026-11-06T12:27:05Z, SOCRATES 0.070 km
+  missed 56137 x 57924 at 2026-11-06T18:24:00Z, SOCRATES 0.077 km
+  missed 58647 x 59338 at 2026-11-04T22:54:46Z, SOCRATES 0.078 km
+our approaches under 0.255 km that are not in the SOCRATES list: 82 (expected: newer element sets, or objects SOCRATES treats as one)

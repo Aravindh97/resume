@@ -1,0 +1,3 @@
+screening 16763 objects (0 records skipped) 2026-11-02T06:00:00Z .. 2026-11-08T08:00:00Z, step 10s, threshold 5.0 km, 8 workers
+objects=16763 steps=52560 took=3m49.131s  propagations=986526816 (4.3 M/s)  pairs checked=851574183 (0.0115% of brute force)  refined=2197157  sgp4 errors=171256
+object-steps screened per second: 3845232

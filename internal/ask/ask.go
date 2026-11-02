@@ -190,7 +190,7 @@ var synonyms = map[string][]string{
 	"validate":  {"valid", "checksum"},
 }
 
-var repos = map[string]bool{"granth": true, "smriti": true, "sutra": true}
+var repos = map[string]bool{"granth": true, "smriti": true, "sutra": true, "fairdrop": true, "paisa": true, "orbit": true, "relief": true, "aqcal": true, "foodwatch": true}
 
 func (ix *Index) Search(q string, k int) []Passage {
 	var qt []string

@@ -1,0 +1,32 @@
+kill  1 after  381ms: entries=0      unbalanced=0 cache-mismatch=0 total=0 negative=0 duplicate-refs=0 -> OK
+kill  2 after 1219ms: entries=0      unbalanced=0 cache-mismatch=0 total=0 negative=0 duplicate-refs=0 -> OK
+kill  3 after 1431ms: entries=280    unbalanced=0 cache-mismatch=0 total=0 negative=0 duplicate-refs=0 -> OK
+kill  4 after 1463ms: entries=865    unbalanced=0 cache-mismatch=0 total=0 negative=0 duplicate-refs=0 -> OK
+kill  5 after  950ms: entries=1164   unbalanced=0 cache-mismatch=0 total=0 negative=0 duplicate-refs=0 -> OK
+kill  6 after 1794ms: entries=1873   unbalanced=0 cache-mismatch=0 total=0 negative=0 duplicate-refs=0 -> OK
+kill  7 after 1692ms: entries=5240   unbalanced=0 cache-mismatch=0 total=0 negative=0 duplicate-refs=0 -> OK
+kill  8 after  516ms: entries=5292   unbalanced=0 cache-mismatch=0 total=0 negative=0 duplicate-refs=0 -> OK
+kill  9 after  936ms: entries=6696   unbalanced=0 cache-mismatch=0 total=0 negative=0 duplicate-refs=0 -> OK
+kill 10 after  668ms: entries=7062   unbalanced=0 cache-mismatch=0 total=0 negative=0 duplicate-refs=0 -> OK
+kill 11 after 1310ms: entries=9435   unbalanced=0 cache-mismatch=0 total=0 negative=0 duplicate-refs=0 -> OK
+kill 12 after 1271ms: entries=11321  unbalanced=0 cache-mismatch=0 total=0 negative=0 duplicate-refs=0 -> OK
+kill 13 after 1182ms: entries=12660  unbalanced=0 cache-mismatch=0 total=0 negative=0 duplicate-refs=0 -> OK
+kill 14 after  597ms: entries=12660  unbalanced=0 cache-mismatch=0 total=0 negative=0 duplicate-refs=0 -> OK
+kill 15 after 1663ms: entries=15292  unbalanced=0 cache-mismatch=0 total=0 negative=0 duplicate-refs=0 -> OK
+kill 16 after 1624ms: entries=17447  unbalanced=0 cache-mismatch=0 total=0 negative=0 duplicate-refs=0 -> OK
+kill 17 after  471ms: entries=17447  unbalanced=0 cache-mismatch=0 total=0 negative=0 duplicate-refs=0 -> OK
+kill 18 after 1217ms: entries=18026  unbalanced=0 cache-mismatch=0 total=0 negative=0 duplicate-refs=0 -> OK
+kill 19 after 1665ms: entries=19833  unbalanced=0 cache-mismatch=0 total=0 negative=0 duplicate-refs=0 -> OK
+kill 20 after 1093ms: entries=19833  unbalanced=0 cache-mismatch=0 total=0 negative=0 duplicate-refs=0 -> OK
+final run to completion (same keys):
+payments=50000 workers=32 fee-shards=16 total=12.061s payment-phase=11.719s (4267 payments/s)
+booked=49814 rejected(insufficient funds)=0 injected-crashes=2502 lost-responses=2533 replays-served=5066 refunds=1001 double-refund-attempts=481
+audit after payments: entries=53298 postings=157894 unbalanced=0 cache-mismatch=0 total=0 negative=0 duplicate-refs=0 (107ms) -> OK
+recon: matched=49566
+  missing_in_ledger  planted=186  found=186
+  missing_in_bank    planted=155  found=155
+  amount_mismatch    planted=93   found=93
+  duplicate_in_bank  planted=97   found=97
+resolved: 531 breaks fixed; running resolve again applied 0 new entries
+audit after reconciliation: entries=53829 postings=158956 unbalanced=0 cache-mismatch=0 total=0 negative=0 duplicate-refs=0 (98ms) -> OK
+balances md5: after 20 kills f0f8d3966f90a9b89ac1dfe4448bfef1, clean uninterrupted run f0f8d3966f90a9b89ac1dfe4448bfef1

@@ -1,0 +1,6 @@
+SGP4 vs python-sgp4 2.27 (Vallado reference, WGS72), 1,999 debris element sets at 0, 6, 24 and 72 h:
+compared 7999 positions; median 0.000 m, p99 0.001 m, max 0.001 m
+
+Screener vs exhaustive brute force (every pair, every 10 s step, refined), 600 objects, 6 hours, 20 km threshold:
+190 pairs, 190 found, 0 missed; minimum range within 10 m of the brute-force value for every pair;
+the screener checked 0.0655% of the pairs brute force checks.

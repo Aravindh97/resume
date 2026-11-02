@@ -1,0 +1,4 @@
+runs=10000 (3-8 devices, 100-500 steps, random partitions, relays, duplicate deliveries, clock skew up to ±5 min) took 21.844s
+converged: 10000/10000   invariant violations: 0 (no lost stock change, add-wins needs, latest-HLC fields)
+baseline (whole-document last-writer-wins): lost data in 10000/10000 runs, 3881347 stock units wrong in total
+sync cost: 881562 syncs, 10.7 ops/sync with version vectors vs 326.9 ops/sync sending everything (3.3% of the bytes)

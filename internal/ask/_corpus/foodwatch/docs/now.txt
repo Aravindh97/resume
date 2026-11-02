@@ -1,0 +1,19 @@
+signals as of 2026-09 (latest WFP prices: 2026-08)
+Awdal            2026-09 WATCH   Gu rains at percentile 17
+Bakool           2026-09 WATCH   Gu rains at percentile 20
+Banadir          2026-09 WATCH   cereal price 81% above normal
+Bari             2026-09 WATCH   Gu rains at percentile 0
+Bay              2026-09 WARNING Gu rains at percentile 13; cereal price 67% above normal
+Galgaduud        2026-09 WATCH   Gu rains at percentile 7
+Gedo             2026-09 none    
+Hiraan           2026-09 WATCH   cereal price 63% above normal
+Lower Juba       2026-09 none    
+Lower Shabelle   2026-09 none      (no recent cereal prices: market signals unavailable)
+Middle Juba      2026-09 none      (no recent cereal prices: market signals unavailable)
+Middle Shabelle  2026-09 WATCH   cereal price 70% above normal
+Mudug            2026-09 WARNING Gu rains at percentile 7; cereal price 75% above normal
+Nugaal           2026-09 WATCH   Gu rains at percentile 20
+Sanaag           2026-09 WATCH   Gu rains at percentile 7
+Sool             2026-09 WATCH   Gu rains at percentile 20
+Togdheer         2026-09 WATCH   Gu rains at percentile 13
+Woqooyi Galbeed  2026-09 WATCH   Gu rains at percentile 7

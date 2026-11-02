@@ -1,0 +1,43 @@
+IPC analyses: 14 (2021-01 .. 2026-01), 18 regions with market data, rainfall: era5
+event: a region's Phase 3+ share reaches 30% and rose 10 points since the previous analysis
+signals use data up to the month before each analysis; rain climatology 1991-2020 (before every analysis)
+
+WARNING (rain deficit + market)    flagged  4/26 events (chance  1.8, p=0.087)  median lead  4.3 weeks   alerts  16, precision 0.25
+WATCH or WARNING (any signal)      flagged 18/26 events (chance 10.8, p=0.003)  median lead 21.6 weeks   alerts  97, precision 0.31
+baseline: rain deficit only        flagged 16/26 events (chance  9.3, p=0.004)  median lead 17.4 weeks   alerts  84, precision 0.32
+baseline: cereal price spike only  flagged  5/26 events (chance  3.0, p=0.165)  median lead 26.1 weeks   alerts  27, precision 0.22
+baseline: terms of trade only      flagged  1/26 events (chance  0.4, p=0.376)  median lead 26.3 weeks   alerts   4, precision 0.25
+
+region-analyses scored: 234; at crisis level (>= 30%): 57, so precision by chance is 0.24
+
+by episode (rain deficit signal):
+  2020-23 Horn of Africa drought   12 of 20 region crisis onsets flagged, median 17.4 weeks before the IPC analysis
+  2025 Deyr failure                 4 of  6 region crisis onsets flagged, median 0.0 weeks before the IPC analysis
+
+events, and the rain-deficit signal the month before:
+  2022-05 Bakool            21% ->  48%   21.6 weeks early  Deyr rains at percentile 13
+  2022-05 Bay               19% ->  52%   21.6 weeks early  Deyr rains at percentile 17
+  2022-07 Bay               52% ->  73%   MISSED            
+  2026-01 Bay               29% ->  40%    0.0 weeks early  Deyr so far rains at percentile 10
+  2022-05 Galgaduud         22% ->  37%   17.1 weeks early  Deyr rains at percentile 17
+  2022-10 Galgaduud         32% ->  43%   13.1 weeks early  Gu rains at percentile 10
+  2026-01 Galgaduud         27% ->  40%    0.0 weeks early  Deyr so far rains at percentile 23; goat buys 53% of its usual cereal
+  2022-05 Gedo              14% ->  44%   17.1 weeks early  Deyr rains at percentile 13
+  2022-05 Hiraan            17% ->  33%   MISSED            
+  2022-05 Lower Juba        24% ->  41%   MISSED            
+  2022-05 Middle Juba       22% ->  41%   MISSED            
+  2022-05 Middle Shabelle   11% ->  31%   MISSED            
+  2022-07 Middle Shabelle   31% ->  44%    0.0 weeks early  Gu so far rains at percentile 13; cereal price 120% above normal
+  2022-05 Mudug             22% ->  43%   17.1 weeks early  Deyr rains at percentile 20
+  2026-01 Mudug             26% ->  43%   MISSED            
+  2022-05 Nugaal            21% ->  39%   21.6 weeks early  Deyr rains at percentile 3; cereal price 56% above normal
+  2022-10 Nugaal            29% ->  43%   43.4 weeks early  Gu rains at percentile 0; cereal price 80% above normal
+  2026-01 Nugaal            21% ->  39%    0.0 weeks early  Deyr so far rains at percentile 23
+  2022-05 Sanaag            25% ->  39%   MISSED            
+  2022-10 Sanaag            18% ->  35%   17.4 weeks early  Gu rains at percentile 0
+  2026-01 Sanaag            23% ->  35%   47.7 weeks early  Deyr so far rains at percentile 13
+  2022-05 Sool              23% ->  42%   21.6 weeks early  Deyr rains at percentile 7
+  2026-01 Sool              20% ->  33%   MISSED            
+  2021-07 Togdheer          19% ->  32%   MISSED            
+  2022-05 Togdheer          14% ->  31%   MISSED            
+  2022-10 Togdheer          26% ->  41%   17.4 weeks early  Gu rains at percentile 17
