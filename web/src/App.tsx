@@ -29,7 +29,7 @@ function Hero({ p }: { p: ProfileData }) {
       <div className="glance">
         <div><b>{projects.filter((x) => x.name !== "Resume").length}</b>personal projects</div>
         <div><b>{live}</b>with a live demo</div>
-        <div><b>Go</b>backends, compiled to WebAssembly for the demos</div>
+        <div><b>Go</b>services, compiled to WebAssembly for the demos</div>
         <div><b>React + TS</b>frontends, typed against the Go structs</div>
       </div>
     </section>
