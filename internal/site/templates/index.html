@@ -20,12 +20,12 @@
 
 <main>
   <section class="card wide">
-    <h2><b>00</b> · Projects you can use right now</h2>
+    <h2><b>00</b> · Personal projects you can use right now</h2>
     <table>
       <tr><th>Project</th><th>What it does</th><th>Stack</th><th></th></tr>
       {{range .Profile.Projects}}{{if .Live}}<tr><td><b>{{.Name}}</b></td><td>{{.What}}</td><td class="muted">{{.Stack}}</td><td class="mono"><a href="{{.Live}}">live demo</a> · <a href="{{.URL}}">code</a></td></tr>{{end}}{{end}}
     </table>
-    <div class="muted">Each demo is the repo's own Go code compiled to WebAssembly, running in your browser. Where the full system uses Postgres, OpenSearch or Temporal, the demo uses an in-memory store with the same rules, and the README reports the numbers measured against the real services.</div>
+    <div class="muted">Built in my own time to learn; not affiliated with my employer. Each demo is the repo's own Go code compiled to WebAssembly, running in your browser. Where the full system uses Postgres, OpenSearch or Temporal, the demo uses an in-memory store with the same rules, and the README reports the numbers measured against the real services.</div>
   </section>
 
   <section class="card wide">

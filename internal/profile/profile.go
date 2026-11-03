@@ -51,7 +51,7 @@ var Profile = ProfileData{
 	},
 	Summary: []string{
 		"Builder at Amazon since 2021 (digital marketing, then automating my team's workflows).",
-		"Ten open-source Go systems, each with tests, CI, results measured against a baseline, and a live demo in the browser.",
+		"Ten personal Go projects, built in my own time to learn, each with tests, CI, results measured against a baseline, and a live demo in the browser.",
 	},
 }
 
