@@ -2,6 +2,8 @@
 
 **Live demo: [aravindh97.github.io/fairdrop](https://aravindh97.github.io/fairdrop/)**: rush a show with up to 20,000 buyers and see that no seat is sold twice, run the naive version and watch seats sell many times over, then run a queue lottery on real drand randomness and try to rig it. The Go code runs in your browser as WebAssembly; see [Live demo](#live-demo) for what differs from the full version.
 
+[![fairdrop running in the browser](docs/screenshot.png)](https://aravindh97.github.io/fairdrop/)
+
 Ticketing for high-demand releases (first-day film shows, cricket, concerts) in Go and PostgreSQL. It solves two problems:
 
 1. **No seat is ever sold twice**, even with tens of thousands of buyers clicking at once, payments timing out, and people double-clicking "Pay".
@@ -107,11 +109,7 @@ The integration tests cover:
 - **Single database.** All numbers come from one Postgres instance on a laptop. Larger venues or many shows would shard by show: each show's seats live in one database, so the locking logic is unchanged.
 - **Simulated payments.** The payment provider is a fake that deduplicates by key, as real providers do.
 
-## Explain it in 2 minutes
-
-"Big releases sell out in seconds, and two things go wrong: double bookings under load, and nobody trusting the queue. For bookings, the hold is one conditional UPDATE that takes exactly the seats you asked for or none of them. It locks rows in a fixed order with SKIP LOCKED, so there are no deadlocks and nobody waits. Payment is idempotent: the key is stored before charging, so retries and double-clicks get the first result. The bookings primary key is the last line of defence. With 50,000 buyers, including timeouts, declines and abandoned holds, we got zero double sales, against 156,000 for the naive version. For fairness, I commit to the entry list before the randomness exists and use a future drand round, so anyone can rebuild the queue and check it."
-
-## Likely interview questions
+## Design decisions
 
 - **Why not `SELECT ... FOR UPDATE` and then `UPDATE`?** You can, but you must lock in a fixed order or you get deadlocks. My first version deadlocked. Doing it in one statement with `SKIP LOCKED` also means no buyer waits on another.
 - **What if the hold expires while the card is being charged?** The final update only books if this hold still owns the seats. If it doesn't, the charge is refunded and the outcome is `refunded`. The money audit checks this.

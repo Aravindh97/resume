@@ -2,6 +2,8 @@
 
 **Live demo: [aravindh97.github.io/orbit](https://aravindh97.github.io/orbit/)**: pick any satellite in the 16,763-object public catalogue, screen it for close approaches, see them on its ground track, and check the screener against brute force in your tab. The Go code runs in your browser as WebAssembly; see [Live demo](#live-demo) for what differs from the full version.
 
+[![orbit running in the browser](docs/screenshot.png)](https://aravindh97.github.io/orbit/)
+
 A satellite conjunction screener in Go: it finds when two objects in orbit will pass within a few kilometres of each other. You can screen your own satellites against the whole public catalogue, or screen every pair.
 
 Commercial collision-warning services are expensive. Student and startup satellite teams usually rely on free alerts, which are noisy and come late. This is an open, fast screener that runs on a laptop from CelesTrak's public data.
@@ -71,11 +73,7 @@ For current data, download the catalogue from CelesTrak (`gp.php?GROUP=…&FORMA
 - **Public groups only.** The bundled catalogue is CelesTrak's public groups. Use a full Space-Track catalogue for complete coverage.
 - **Not a manoeuvre-planning tool.** Use it for awareness and triage.
 
-## Explain it in 2 minutes
-
-"Small satellite teams can't afford collision alerts, so I built a screener for the public catalogue. The naive approach compares 140 million pairs every 10 seconds. I cut that in three stages. Altitude bands rule out pairs that can never meet. A spatial hash only compares neighbours, with the cell size chosen from the maximum relative speed so nothing can be missed. A straight-line closest-approach estimate decides which pairs to refine on the real model. It checks 0.01% of the pairs and matched an exhaustive brute force on all 190 encounters. Six days for 16,763 objects takes under four minutes on 8 cores, about 3.8 million object-steps a second. I validated the SGP4 port against the reference to a millimetre, after fixing an epoch bug that put satellites a median 3.6 km off. Against SOCRATES, recall is limited by data, not by the algorithm: my element sets were 20 hours newer, and many SOCRATES objects aren't in the public groups. The repo has a script to rerun it on the same data."
-
-## Likely interview questions
+## Design decisions
 
 - **Why can the grid miss nothing?** Two objects can't close faster than about 16 km/s. If they come within D at some moment in the step, then at the sample time they were within D + 16 km/s × step. The cells are that size, and neighbouring cells are checked too.
 - **Why golden-section and not Newton's method?** Distance as a function of time is smooth and has a single minimum within one step. Golden-section needs no derivatives and always converges.

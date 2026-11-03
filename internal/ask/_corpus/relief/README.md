@@ -2,6 +2,8 @@
 
 **Live demo: [aravindh97.github.io/relief](https://aravindh97.github.io/relief/)**: cut the network between three devices, change stock and needs on both sides, reconnect and watch them merge; run the randomised partition test in your tab. The Go code runs in your browser as WebAssembly; see [Live demo](#live-demo) for what differs from the full version.
 
+[![relief running in the browser](docs/screenshot.png)](https://aravindh97.github.io/relief/)
+
 Offline-first data sync for disaster relief teams, in Go with no dependencies.
 
 After a cyclone or flood, camps and supply trucks can go days without a network. Teams keep recording what came in, what was handed out, who needs what, and each camp's status. When devices meet again, over a local hotspot, a USB stick, or a phone carried between camps, their records have to merge **without losing anyone's changes**. The usual approach, "the newest copy of the sheet wins", silently drops the other side's work.
@@ -92,11 +94,7 @@ relief serve  -dir ./camp2 -addr 127.0.0.1:7700   ;   relief sync -dir ./truck h
 - **History is never compacted.** Every op is kept. That's fine for the tens of thousands of changes a relief operation makes, but very long deployments would need compaction once every device has seen an op.
 - **Simulated network.** The 10,000 runs use an in-process network. The demo uses real processes and files.
 
-## Explain it in 2 minutes
-
-"Relief teams lose network for days and keep working, and the usual sync, newest copy wins, throws away the other side's work. In my simulation it lost data in every one of 10,000 runs. I modelled the data as a set of operations, each stamped with device and sequence number. Devices swap version vectors and send only what the other lacks, so the data sent is about 3% of a full copy, and ops can be relayed through a truck. The state is computed with rules where order doesn't matter: stock is a counter, needs are an add-wins set, and fields are last-writer-wins on a hybrid logical clock, so a fast phone clock can't win wrongly. Across 10,000 randomised runs with partitions, duplicates and clock skew, every device converged and the rules held against an oracle. What it can't do is stop two camps handing out the same stock offline, so it reports that as a conflict for a human."
-
-## Likely interview questions
+## Design decisions
 
 - **Why not last-writer-wins for everything?** Two camps change the same stock count offline and one change disappears. Counters add both changes instead.
 - **Add-wins or remove-wins for needs?** Add-wins: a request for insulin must never vanish because someone closed an older one. The cost is that a need is sometimes closed twice.

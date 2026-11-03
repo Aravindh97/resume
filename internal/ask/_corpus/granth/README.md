@@ -2,6 +2,8 @@
 
 **Live demo: [aravindh97.github.io/granth](https://aravindh97.github.io/granth/)**: ask the test corpus questions and see each answer's file, page, section and rank trace, ingest your own Markdown, HTML, CSV or PDF, watch broken files get classified, run the 44-question eval, and call the MCP search tool. The Go code runs in your browser as WebAssembly; see [Live demo](#live-demo) for what differs from the full version.
 
+[![granth running in the browser](docs/screenshot.png)](https://aravindh97.github.io/granth/)
+
 Document ingestion and hybrid retrieval for AI agents, in Go, built on Temporal, OpenSearch and PostgreSQL.
 
 Granth takes a folder of messy enterprise files (Markdown, HTML, text, CSV, text PDFs and scanned PDFs), runs each one through a retry-safe Temporal workflow, and indexes layout-aware chunks into OpenSearch. Agents call it through MCP tools that return passages with citations: source file, page, section path and block range.

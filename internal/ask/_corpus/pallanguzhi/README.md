@@ -2,6 +2,8 @@
 
 **Live demo: [aravindh97.github.io/pallanguzhi](https://aravindh97.github.io/pallanguzhi/)**: play Pallanguzhi against the Go AI and see every move it considered. The rules and AI run in your browser as Go WebAssembly, the same code as the terminal version.
 
+[![pallanguzhi running in the browser](docs/screenshot.png)](https://aravindh97.github.io/pallanguzhi/)
+
 Pallanguzhi (பல்லாங்குழி), the fourteen-pit Tamil mancala game, with a rules engine and a search-based AI opponent in Go. No dependencies.
 
 ## Play it
@@ -57,11 +59,7 @@ Other checks:
   - **hard:** deepens one move at a time until it has searched 300,000 positions, usually 14 to 30 moves deep. It counts positions instead of time, so it plays the same move on every machine. That takes about 60 ms per move natively and about 0.4 s in the browser.
 - **Explanations:** the web page shows every move the AI considered, what each captures immediately, and the margin it expects.
 
-## Explain it in 2 minutes
-
-Pallanguzhi is a Tamil mancala game where a single move can chain through most of the board. The rules engine is a 14-element array and a loop that records every lift, drop and capture, so the browser can animate a move step by step. The AI is a game-tree search with alpha-beta pruning. A test checks that pruning never changes its answer, and another plays 5,000 random games to check that seeds are conserved and every game ends. To measure strength I wrote a parallel tournament where each game has its own seed, so results don't depend on goroutine scheduling. Measuring by seat showed that the first player is at a large disadvantage, which a single win-rate number would have hidden.
-
-## Likely interview questions
+## Design decisions
 
 - *Why count positions instead of time for the hard level?* So play is the same on every machine and in tests. A time limit would make the AI weaker on a slow phone and the results irreproducible.
 - *How do you know alpha-beta is correct?* It is compared with the unpruned search in 1,200 random positions at depths 1 to 4.

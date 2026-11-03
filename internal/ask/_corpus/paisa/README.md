@@ -2,6 +2,8 @@
 
 **Live demo: [aravindh97.github.io/paisa](https://aravindh97.github.io/paisa/)**: pay with idempotency keys, retry, reuse a key, crash before commit, then run a 50,000-payment chaos test and reconcile it against a broken bank file. The Go code runs in your browser as WebAssembly; see [Live demo](#live-demo) for what differs from the full version.
 
+[![paisa running in the browser](docs/screenshot.png)](https://aravindh97.github.io/paisa/)
+
 An exactly-once, double-entry ledger with UPI-style settlement reconciliation, in Go and PostgreSQL.
 
 Payment systems fail in a few common ways:
@@ -95,11 +97,7 @@ go test -race -tags integration -p 1 ./...
 - **No currency conversion and no interest.** It handles a single currency (INR, in paise).
 - **No database-level kill test.** The kill test kills the application process. It doesn't kill Postgres itself, whose crash safety comes from its write-ahead log.
 
-## Explain it in 2 minutes
-
-"Payments fail in boring ways: timeouts, retries, crashes, and bank files that don't match. Paisa is a double-entry ledger, so every movement sums to zero, and the audit can prove the books balance from raw postings. Each request carries an idempotency key that is stored in the same transaction as its postings. So a request either fully happened, with its key recorded, or didn't happen at all. Retries get the original result, even a rejection. To prove it, I killed the process with kill -9 twenty times during 50,000 payments. The books balanced after every kill, and the final balances matched a clean run exactly. Then I reconciled against a bank file with 477 planted errors. All 477 were found and fixed, and running the fix again changed nothing. The one performance problem was the fee account every payment touches. Sharding it took throughput from 437 to about 3,000 payments a second."
-
-## Likely interview questions
+## Design decisions
 
 - **Why not just a `UNIQUE` constraint on the idempotency key?** That alone prevents a double write, but two concurrent retries would both do the work and one would fail with an error. The advisory lock makes the second retry wait, then return the stored result cleanly.
 - **Why store rejections?** So the answer to a key never changes. Otherwise a retry after a top-up could pay for something the user was already told had failed.

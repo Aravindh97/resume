@@ -2,6 +2,8 @@
 
 **Live demo: [aravindh97.github.io/foodwatch](https://aravindh97.github.io/foodwatch/)**: pick a region to see its rainfall, prices and IPC history, see which regions are on WATCH or WARNING now, and rerun the backtest with either rainfall source. The Go code runs in your browser as WebAssembly; see [Live demo](#live-demo) for what differs from the full version.
 
+[![foodwatch running in the browser](docs/screenshot.png)](https://aravindh97.github.io/foodwatch/)
+
 Food-stress early warning in Go. It combines rainfall, staple cereal prices and livestock-to-cereal terms of trade per region, then backtests the alerts against what actually happened.
 
 Rain shortfalls and market shocks appear in public data months before a food crisis is officially classified. `foodwatch` computes simple, explainable signals for each region every month. It then checks them against **IPC** classifications, the official, consensus-based scale used by governments and UN agencies, where **Phase 3** means "Crisis".
@@ -98,11 +100,7 @@ go test -race ./...
 - **No conflict signal.** IPC outcomes in Somalia also depend on conflict and humanitarian access, which this model doesn't include.
 - **Not a forecast.** It is a set of signals for analysts. It doesn't replace FEWS NET or IPC.
 
-## Explain it in 2 minutes
-
-"I wanted to see whether public data warns of food crises early enough to matter. Ground truth had to be independent, so I used IPC classifications. That meant Somalia, not India, which doesn't use IPC. Each month, for each region, I compute three signals using only data that would really have been available: rainfall percentile against 1991–2020, cereal prices against their own two-year median, and how much grain a goat buys. Then I backtest against 26 crisis onsets with a random-placement baseline. Rainfall alone flagged 20 of 26 onsets, about 22 weeks before the IPC analysis, against 11 by chance. The price signals didn't beat chance, mainly because of data gaps. My first rainfall source said the 2021 drought season was wet, which taught me to cross-check sources against known events before trusting a backtest."
-
-## Likely interview questions
+## Design decisions
 
 - **How do you avoid lookahead?** Each signal for month m uses data up to m − 1, and an analysis is scored with the signal from the month before it starts. The climatology (1991–2020) ends before the first analysis.
 - **Why a random baseline?** Droughts are common in Somalia. Without a baseline, "flagged 20 of 26" says nothing about whether the signal is better than raising alerts at random.

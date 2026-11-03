@@ -2,6 +2,8 @@
 
 **Live demo: [aravindh97.github.io/aqcal](https://aravindh97.github.io/aqcal/)**: pick any of the 20 Berlin sensors to see raw, calibrated and reference PM2.5, then break it (stuck, saturated, offline, spike, drift) and watch the streaming detector catch it. The Go code runs in your browser as WebAssembly; see [Live demo](#live-demo) for what differs from the full version.
 
+[![aqcal running in the browser](docs/screenshot.png)](https://aravindh97.github.io/aqcal/)
+
 Calibration and fault detection for low-cost air-quality sensors, written as a streaming pipeline in Go.
 
 Community-run air-quality sensors cost about €30 and cover whole cities, but they drift, get stuck, saturate, and disagree with official stations. So their readings tend to get ignored. `aqcal` does three things:
@@ -112,11 +114,7 @@ go test -race ./...
 - **Slow drift detection:** it takes about 5 days. That's a deliberate trade for fewer false alarms.
 - **Live API:** loopback only, no authentication. It's a demo of the stream, not a public service.
 
-## Explain it in 2 minutes
-
-"Cheap air sensors cover cities but nobody trusts them. I took a month of real readings from 20 Berlin sensors near official stations. A health check on the training days excluded 5 broken ones on its own; three didn't correlate with the reference at all. Per-sensor calibration then cut the error on unseen days by 52% against raw readings and by 24% against one fit for all sensors, because every unit has its own gain. Humidity correction didn't help that month, and I report that instead of hiding it. Running it as a stream needed watermarks: the detector closes an hour only after every shard has passed it, so late data counts and nothing is evaluated twice. I injected 300 faults into the held-out data and caught 298, with no false alarms on clean data apart from real outages and one doubtful sensor. Eight shards handle about 7 million readings a second."
-
-## Likely interview questions
+## Design decisions
 
 - **Why watermarks and not just timestamps?** Shards run independently. Without a watermark, the detector can't know whether another shard still holds readings for an hour it is about to close.
 - **Why bounded channels?** Backpressure. An unbounded queue hides a slow stage until memory runs out.
