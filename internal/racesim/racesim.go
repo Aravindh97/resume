@@ -36,7 +36,7 @@ type Field struct {
 }
 
 var DefaultFields = []Field{
-	{"role", [2]string{"Backend Engineer (Go)", "Backend Engineer, Go!"}},
+	{"role", [2]string{"Full-Stack Engineer (Go)", "Full-Stack Engineer, Go!"}},
 	{"focus", [2]string{"Retrieval, Memory, Pipelines", "Pipelines, Retrieval, Memory"}},
 	{"stack", [2]string{"Go, Temporal, OpenSearch, Postgres", "Go + Temporal + OpenSearch + PG"}},
 	{"based", [2]string{"Tiruppur", "Bengaluru"}},

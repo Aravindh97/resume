@@ -7,7 +7,7 @@ import type { ProfileData } from "./types.gen";
 afterEach(cleanup);
 
 const profile: ProfileData = {
-  name: "Aravindh Varadharaj", role: "Go backend", focus: "Concurrency", location: "Tiruppur", email: "a@b.c",
+  name: "Aravindh Varadharaj", role: "Full-stack", focus: "Concurrency", location: "Tiruppur", email: "a@b.c",
   links: [{ label: "GitHub", url: "https://github.com/Aravindh97" }],
   projects: [
     { name: "paisa", what: "Exactly-once ledger", stack: "Go, PostgreSQL", url: "https://github.com/Aravindh97/paisa", live: "https://aravindh97.github.io/paisa/" },

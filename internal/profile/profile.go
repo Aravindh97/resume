@@ -42,7 +42,7 @@ const pages = "https://aravindh97.github.io"
 
 var Profile = ProfileData{
 	Name:     "Aravindh Varadharaj",
-	Role:     "Go backend",
+	Role:     "Full-stack",
 	Focus:    "Concurrency · Payments · Distributed systems · Data pipelines · Search and retrieval",
 	Location: "Tiruppur, Tamil Nadu, India (open to relocation, on-site or remote)",
 	Email:    "aravindhvaradha@gmail.com",
@@ -63,7 +63,7 @@ var Profile = ProfileData{
 	},
 	Summary: []string{
 		"Builder at Amazon since 2021 (digital marketing, then automating my team's workflows).",
-		"Ten personal Go projects, built in my own time to learn, each with tests, CI, results measured against a baseline, and a live demo in the browser.",
+		"Ten personal full-stack projects (Go services, React + TypeScript frontends), built in my own time to learn, each with tests, CI, results measured against a baseline, and a live demo in the browser.",
 	},
 	Experience: []Job{{
 		Title: "Sr. Digital Marketing Associate, Amazon",
