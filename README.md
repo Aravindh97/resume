@@ -2,7 +2,9 @@
 
 My resume, as a Go system you can poke at. One binary, standard library only, serves four panels:
 
-![The site running as a 4-node mesh, with one node isolated](docs/screenshot.png)
+**Live: [aravindh97.github.io/resume](https://aravindh97.github.io/resume/)**
+
+[![The resume site running in the browser](docs/screenshot.png)](https://aravindh97.github.io/resume/)
 
 1. **Ask my work.** Search over the source, READMEs and eval reports of [Granth](https://github.com/Aravindh97/granth), [Smriti](https://github.com/Aravindh97/smriti) and [Sutra](https://github.com/Aravindh97/sutra). It is extractive, with no LLM: every answer is the actual passage, with a link to the file and line range at the commit that was snapshotted.
 2. **Resume mesh.** Four nodes replicate the resume with a Raft implementation written for this repo ([`internal/raft`](internal/raft/raft.go)). It covers leader election, log replication, commit by majority, and repair of a diverged log. You can **isolate the leader** and watch a new one get elected while the page keeps answering.
