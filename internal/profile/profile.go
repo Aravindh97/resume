@@ -31,8 +31,8 @@ const pages = "https://aravindh97.github.io"
 var Profile = ProfileData{
 	Name:     "Aravindh Varadharaj",
 	Role:     "Go backend",
-	Focus:    "Ingestion pipelines · Retrieval with citations · Agent memory · Entity resolution",
-	Location: "Tiruppur, Tamil Nadu (open to Bengaluru, on-site)",
+	Focus:    "Concurrency · Payments · Distributed systems · Data pipelines · Search and retrieval",
+	Location: "Tiruppur, Tamil Nadu, India (open to relocation, on-site or remote)",
 	Email:    "aravindhvaradha@gmail.com",
 	Links: []Link{{"github.com/Aravindh97", gh}, {"LinkedIn", "https://www.linkedin.com/in/aravindh-varadharaj-253231201"},
 		{"resume.pdf", "static/resume.pdf"}},
@@ -51,7 +51,7 @@ var Profile = ProfileData{
 	},
 	Summary: []string{
 		"Builder at Amazon since 2021 (digital marketing, then automating my team's workflows).",
-		"Three open-source Go systems for agent knowledge and memory, each tested against real Postgres, OpenSearch and Temporal and measured with its own eval.",
+		"Ten open-source Go systems, each with tests, CI, results measured against a baseline, and a live demo in the browser.",
 	},
 }
 
