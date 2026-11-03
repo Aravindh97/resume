@@ -48,6 +48,18 @@ The time window is split into slices that run in parallel, about four per core t
 
 **SGP4.** The code is vendored from [go-satellite](https://github.com/joshuaferrara/go-satellite) (BSD-2). I fixed one bug: upstream truncated each TLE's epoch to whole seconds. Measured on 2,000 debris objects, that put positions a median 3.6 km and up to 7.5 km off. After the fix it matches the reference to 1 mm. I also added an API that returns errors and never panics on a bad TLE. Building the ground-track map for the live demo turned up a second upstream bug: `LatLongDeg` mapped 190° to 170° instead of −170°, mirroring the eastern half of every track, and called `log.Fatal` on an out-of-range latitude. Both are fixed and tested.
 
+## Frontend
+
+The page is **React 19 + TypeScript**, built with Vite, in [`web/`](web/). It talks to the Go code in [`cmd/web`](cmd/web/), compiled to WebAssembly, through the same JSON API a server would offer: `api("POST", "path", body)` in [`web/src/lib/go.ts`](web/src/lib/go.ts) is answered by the Go handler registered for that route.
+
+`cmd/web` builds its responses as maps, so their TypeScript types are written by hand in `web/src/App.tsx`.
+
+```
+./web/build.sh dist        # Go to WebAssembly, then the React build, into dist/
+cd web && npm run dev      # dev server with hot reload (run build.sh once first for app.wasm)
+cd web && npm test         # component tests (Vitest + Testing Library, Go replaced by a fake)
+```
+
 ## Live demo
 
 The page at https://aravindh97.github.io/orbit/ is this repo's Go code compiled to WebAssembly (`cmd/web`), with a plain HTML/JS frontend in `web/`. `.github/workflows/pages.yml` builds and publishes it on every push. GitHub Pages only serves static files, so anything that needs a database or a server runs against in-memory versions in the browser; the numbers in this README come from the full version.

@@ -51,6 +51,18 @@ Other checks:
 - `TestRandomGames`: 5,000 random games. All of them end, the board always holds exactly 148 seeds, and no turn reaches the safety limit of 2,000 relays (the longest relay seen was 32).
 - Hand-worked positions test each rule: capture, pasu, relay, two empty pits, and wrapping around the board.
 
+## Frontend
+
+The page is **React 19 + TypeScript**, built with Vite, in [`web/`](web/). It talks to the Go code in [`cmd/web`](cmd/web/), compiled to WebAssembly, through the same JSON API a server would offer: `api("POST", "path", body)` in [`web/src/lib/go.ts`](web/src/lib/go.ts) is answered by the Go handler registered for that route.
+
+Types for the domain structs the page uses are **generated from the Go code** (`go run ./cmd/tsgen` writes `web/src/types.gen.ts`), and CI fails if they drift. The small response wrappers built in `cmd/web` are typed by hand.
+
+```
+./web/build.sh dist        # Go to WebAssembly, then the React build, into dist/
+cd web && npm run dev      # dev server with hot reload (run build.sh once first for app.wasm)
+cd web && npm test         # component tests (Vitest + Testing Library, Go replaced by a fake)
+```
+
 ## How the AI works
 
 - **Search:** negamax with alpha-beta pruning ([`internal/ai`](internal/ai/ai.go)). Moves that capture the most right away are tried first, so pruning cuts more of the tree.

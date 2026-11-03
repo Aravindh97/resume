@@ -96,6 +96,18 @@ These came from a run against the local Docker stack:
   3. After `docker start`, the workflow finished with `indexed` and the document became searchable.
   4. No duplicate chunks were created.
 
+## Frontend
+
+The page is **React 19 + TypeScript**, built with Vite, in [`web/`](web/). It talks to the Go code in [`cmd/web`](cmd/web/), compiled to WebAssembly, through the same JSON API a server would offer: `api("POST", "path", body)` in [`web/src/lib/go.ts`](web/src/lib/go.ts) is answered by the Go handler registered for that route.
+
+Types for the domain structs the page uses are **generated from the Go code** (`go run ./cmd/tsgen` writes `web/src/types.gen.ts`), and CI fails if they drift. The small response wrappers built in `cmd/web` are typed by hand.
+
+```
+./web/build.sh dist        # Go to WebAssembly, then the React build, into dist/
+cd web && npm run dev      # dev server with hot reload (run build.sh once first for app.wasm)
+cd web && npm test         # component tests (Vitest + Testing Library, Go replaced by a fake)
+```
+
 ## Live demo
 
 The page at https://aravindh97.github.io/granth/ is this repo's Go code compiled to WebAssembly (`cmd/web`), with a plain HTML/JS frontend in `web/`. `.github/workflows/pages.yml` builds and publishes it on every push. GitHub Pages only serves static files, so anything that needs a database or a server runs against in-memory versions in the browser; the numbers in this README come from the full version.

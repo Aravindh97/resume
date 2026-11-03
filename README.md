@@ -72,6 +72,24 @@ Scope: state is in memory, membership is fixed, and there's no log compaction. T
 - The safe modes are tested under `-race`.
 - The unsafe mode is a deliberate data race. `-race` would rightly reject it, so its test is built with `!race`, runs single-threaded like the browser, and passed 300 of 300 runs.
 
+## Frontend
+
+The page is **React 19 + TypeScript**, built with Vite, in [`web/`](web/). One build serves both modes:
+- **Server:** `cmd/site` serves the built page at `/` and answers `/api/v1/*` over HTTP.
+- **Static (GitHub Pages):** there is no server. The page sees that `api/v1/profile` is not JSON, sets `STATIC_SITE`, and the same routes are answered by `cmd/app-wasm` in the tab.
+
+[`web/src/lib/go.ts`](web/src/lib/go.ts) picks the mode. Both modes load the WebAssembly module, which also runs the race simulator.
+
+The TypeScript types for the profile, results, search passages, Raft node status and race snapshots are **generated from the Go structs** (`go run ./cmd/tsgen` writes `web/src/types.gen.ts`), and CI fails if they drift. That caught real bugs while building the page: Go slices can be `null` in JSON, and the generated types made the page handle it.
+
+```
+make ui                  # build the React page into internal/site/static/ui (embedded by the Go server)
+cd web && npm run dev    # dev server; needs a running mesh (make mesh) for the API
+cd web && npm test       # component tests (Vitest + Testing Library)
+```
+
+The built page is committed, like `app.wasm`, so `go run ./cmd/site` works without Node.
+
 ## Free hosting: GitHub Pages
 
 The whole site also runs with no server. `make static` builds `dist/`. In that build, the Go WebAssembly module answers the same `/api/v1/*` routes inside the visitor's tab:
@@ -97,10 +115,12 @@ Each app exposes only port 8080 through Fly's HTTPS proxy. Raft runs on `fly-loc
 ```
 cmd/site            one mesh node (public + private listeners)
 cmd/career          the career CLI
-cmd/racesim-wasm    browser entry point for the race simulator
+cmd/app-wasm        browser entry point: race simulator, and the API on GitHub Pages
+cmd/tsgen           writes web/src/types.gen.ts from the Go types
 internal/raft       Raft consensus
 internal/racesim    shared-record race simulator
 internal/career     milestones, log/show/cherry-pick, real git repo writer
 internal/ask        BM25 over the snapshotted repos (scripts/snapshot-corpus.sh)
-internal/site       HTTP server, templates, static assets
+internal/site       HTTP server and embedded assets (the built React page in static/ui)
+web/                React + TypeScript frontend
 ```

@@ -17,7 +17,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"html/template"
 	"io"
 	"io/fs"
 	"log/slog"
@@ -36,7 +35,7 @@ import (
 	"github.com/Aravindh97/resume/internal/raft"
 )
 
-//go:embed static templates
+//go:embed static
 var assets embed.FS
 
 type Peer struct{ ID, RaftAddr, Region string }
@@ -55,7 +54,6 @@ type Server struct {
 	cfg     Config
 	node    *raft.Node
 	index   *ask.Index
-	tmpl    *template.Template
 	client  *http.Client
 	started time.Time
 
@@ -80,11 +78,7 @@ func New(cfg Config) (*Server, error) {
 	if err != nil {
 		return nil, err
 	}
-	t, err := template.ParseFS(assets, "templates/*.html")
-	if err != nil {
-		return nil, err
-	}
-	s := &Server{cfg: cfg, index: ix, tmpl: t, started: time.Now(), limiter: newLimiter(20, 40),
+	s := &Server{cfg: cfg, index: ix, started: time.Now(), limiter: newLimiter(20, 40),
 		client: &http.Client{Timeout: 2 * time.Second}}
 	var peers []string
 	for _, p := range cfg.Peers {
@@ -302,10 +296,23 @@ func (s *Server) publicHandler() http.Handler {
 	mux := http.NewServeMux()
 	static, _ := fs.Sub(assets, "static")
 	mux.Handle("GET /static/", http.StripPrefix("/static/", http.FileServerFS(static)))
+	// The page is the React app in web/, built into static/ui by `make ui`;
+	// its assets/ and shots/ folders are served at the root, next to it.
+	if ui, err := fs.Sub(assets, "static/ui"); err == nil {
+		mux.Handle("GET /assets/", http.FileServerFS(ui))
+		mux.Handle("GET /shots/", http.FileServerFS(ui))
+	}
 	mux.HandleFunc("GET /{$}", func(w http.ResponseWriter, r *http.Request) {
+		page, err := assets.ReadFile("static/ui/index.html")
+		if err != nil {
+			http.Error(w, "frontend not built: run make ui", http.StatusServiceUnavailable)
+			return
+		}
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		s.tmpl.ExecuteTemplate(w, "index.html", map[string]any{"Node": s.cfg.ID, "Region": s.cfg.Region,
-			"Evals": profile.Evals, "Profile": profile.Profile, "Static": false})
+		w.Write(page)
+	})
+	mux.HandleFunc("GET /api/v1/node", func(w http.ResponseWriter, r *http.Request) {
+		writeJSON(w, 200, map[string]string{"id": s.cfg.ID, "region": s.cfg.Region})
 	})
 	mux.HandleFunc("GET /api/v1/profile", func(w http.ResponseWriter, r *http.Request) { writeJSON(w, 200, profile.Profile) })
 	mux.HandleFunc("GET /api/v1/evals", func(w http.ResponseWriter, r *http.Request) { writeJSON(w, 200, profile.Evals) })

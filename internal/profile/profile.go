@@ -4,7 +4,16 @@ package profile
 
 const gh = "https://github.com/Aravindh97"
 
-type Link struct{ Label, URL string }
+type Link struct {
+	Label string `json:"label"`
+	URL   string `json:"url"`
+}
+
+type Job struct {
+	Title   string   `json:"title"`
+	Dates   string   `json:"dates"`
+	Bullets []string `json:"bullets"`
+}
 
 type ProfileData struct {
 	Name     string   `json:"name"`
@@ -15,6 +24,9 @@ type ProfileData struct {
 	Links    []Link   `json:"links"`
 	Projects []Repo   `json:"projects"`
 	Summary  []string `json:"summary"`
+	// Experience and Education match the PDF resume.
+	Experience []Job  `json:"experience"`
+	Education  string `json:"education"`
 }
 
 type Repo struct {
@@ -53,6 +65,16 @@ var Profile = ProfileData{
 		"Builder at Amazon since 2021 (digital marketing, then automating my team's workflows).",
 		"Ten personal Go projects, built in my own time to learn, each with tests, CI, results measured against a baseline, and a live demo in the browser.",
 	},
+	Experience: []Job{{
+		Title: "Sr. Digital Marketing Associate, Amazon",
+		Dates: "2021 to present",
+		Bullets: []string{
+			"Built and automated internal tools and workflows for my team, replacing repetitive manual tasks with reliable, reusable solutions.",
+			"Worked with stakeholders to find process gaps, then designed, built and supported automation that the team adopted in daily work.",
+			"Grew from a marketing role into hands-on development, and built Go and Python backend systems outside my core responsibilities.",
+		},
+	}},
+	Education: "Bachelor of Engineering (B.E.) in Mechanical Engineering",
 }
 
 type Eval struct {

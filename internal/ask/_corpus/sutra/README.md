@@ -109,6 +109,18 @@ The metric is pairwise precision, recall and F1. Full output: [`docs/eval.txt`](
 
 **What these numbers show.** At 2,000 companies, the generator's 240 possible names spread over 7 cities, so many unrelated companies share a name and city. Precision drops to about 0.89, and the review queue grows to thousands of pairs. Records with no identifiers can't be separated in that setting. The fix is more signals (addresses, bank account hashes) and cheaper review, not lower thresholds. The data is synthetic. Real ERP and CRM exports will have failure modes the generator doesn't model.
 
+## Frontend
+
+The page is **React 19 + TypeScript**, built with Vite, in [`web/`](web/). It talks to the Go code in [`cmd/web`](cmd/web/), compiled to WebAssembly, through the same JSON API a server would offer: `api("POST", "path", body)` in [`web/src/lib/go.ts`](web/src/lib/go.ts) is answered by the Go handler registered for that route.
+
+Types for the domain structs the page uses are **generated from the Go code** (`go run ./cmd/tsgen` writes `web/src/types.gen.ts`), and CI fails if they drift. The small response wrappers built in `cmd/web` are typed by hand.
+
+```
+./web/build.sh dist        # Go to WebAssembly, then the React build, into dist/
+cd web && npm run dev      # dev server with hot reload (run build.sh once first for app.wasm)
+cd web && npm test         # component tests (Vitest + Testing Library, Go replaced by a fake)
+```
+
 ## Live demo
 
 The page at https://aravindh97.github.io/sutra/ is this repo's Go code compiled to WebAssembly (`cmd/web`), with a plain HTML/JS frontend in `web/`. `.github/workflows/pages.yml` builds and publishes it on every push. GitHub Pages only serves static files, so anything that needs a database or a server runs against in-memory versions in the browser; the numbers in this README come from the full version.

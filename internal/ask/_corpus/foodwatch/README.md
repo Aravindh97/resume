@@ -75,6 +75,18 @@ Each signal is computed per region per month **m**. Data for **m − 1** is the 
 
 The thresholds (30th percentile, 1.4×, 0.7×) were set once, before the first run, and never tuned.
 
+## Frontend
+
+The page is **React 19 + TypeScript**, built with Vite, in [`web/`](web/). It talks to the Go code in [`cmd/web`](cmd/web/), compiled to WebAssembly, through the same JSON API a server would offer: `api("POST", "path", body)` in [`web/src/lib/go.ts`](web/src/lib/go.ts) is answered by the Go handler registered for that route.
+
+`cmd/web` builds its responses as maps, so their TypeScript types are written by hand in `web/src/App.tsx`.
+
+```
+./web/build.sh dist        # Go to WebAssembly, then the React build, into dist/
+cd web && npm run dev      # dev server with hot reload (run build.sh once first for app.wasm)
+cd web && npm test         # component tests (Vitest + Testing Library, Go replaced by a fake)
+```
+
 ## Live demo
 
 The page at https://aravindh97.github.io/foodwatch/ is this repo's Go code compiled to WebAssembly (`cmd/web`), with a plain HTML/JS frontend in `web/`. `.github/workflows/pages.yml` builds and publishes it on every push. GitHub Pages only serves static files, so anything that needs a database or a server runs against in-memory versions in the browser; the numbers in this README come from the full version.

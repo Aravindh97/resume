@@ -9,5 +9,11 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
         with: {go-version: "1.26"}
-      - run: make wasm
+      - uses: actions/setup-node@v4
+        with: {node-version: "24", cache: npm, cache-dependency-path: web/package-lock.json}
+      - run: make wasm ui
       - run: make test
+      - name: TypeScript types match the Go structs
+        run: go run ./cmd/tsgen && git diff --exit-code web/src/types.gen.ts
+      - run: npm test
+        working-directory: web

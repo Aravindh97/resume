@@ -35,6 +35,12 @@ func TestPublicRoutes(t *testing.T) {
 	if w := get("/api/v1/career?cmd=init+/tmp/x"); w.Code != 400 {
 		t.Fatal("career init must not run on the server")
 	}
+	if w := get("/shots/paisa.jpg"); w.Code != 200 {
+		t.Fatalf("React build assets at the root: %d", w.Code)
+	}
+	if w := get("/api/v1/profile"); w.Code != 200 || !strings.Contains(w.Header().Get("Content-Type"), "json") {
+		t.Fatalf("profile must be JSON so the page can detect server mode: %d", w.Code)
+	}
 	if w := get("/static/app.wasm"); w.Code != 200 || w.Header().Get("Content-Type") != "application/wasm" {
 		t.Fatalf("wasm: %d %s", w.Code, w.Header().Get("Content-Type"))
 	}
