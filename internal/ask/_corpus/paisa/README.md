@@ -4,6 +4,8 @@
 
 [![paisa running in the browser](docs/screenshot.png)](https://aravindh97.github.io/paisa/)
 
+*A personal project, built in my own time to learn. Not affiliated with or endorsed by my employer.*
+
 An exactly-once, double-entry ledger with UPI-style settlement reconciliation, in Go and PostgreSQL.
 
 Payment systems fail in a few common ways:

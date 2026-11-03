@@ -4,6 +4,8 @@
 
 [![sutra running in the browser](docs/screenshot.png)](https://aravindh97.github.io/sutra/)
 
+*A personal project, built in my own time to learn. Not affiliated with or endorsed by my employer.*
+
 Enterprise connectors, an ontology and entity resolution in Go and PostgreSQL, so agents can work with structured records from several systems as one consistent model.
 
 Sutra streams an ERP's vendor table through Postgres logical replication (CDC) and syncs CRM accounts incrementally over a REST API. It maps both onto a YAML ontology and works out which records describe the same company, using Indian business identifiers (GSTIN with checksum, PAN, +91 phones) and transliteration-aware name matching. Every value in the resulting golden record can be traced to the source record it came from. Agents query it through read-only MCP tools.

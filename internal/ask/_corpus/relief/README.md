@@ -4,6 +4,8 @@
 
 [![relief running in the browser](docs/screenshot.png)](https://aravindh97.github.io/relief/)
 
+*A personal project, built in my own time to learn. Not affiliated with or endorsed by my employer.*
+
 Offline-first data sync for disaster relief teams, in Go with no dependencies.
 
 After a cyclone or flood, camps and supply trucks can go days without a network. Teams keep recording what came in, what was handed out, who needs what, and each camp's status. When devices meet again, over a local hotspot, a USB stick, or a phone carried between camps, their records have to merge **without losing anyone's changes**. The usual approach, "the newest copy of the sheet wins", silently drops the other side's work.

@@ -4,6 +4,8 @@
 
 [![granth running in the browser](docs/screenshot.png)](https://aravindh97.github.io/granth/)
 
+*A personal project, built in my own time to learn. Not affiliated with or endorsed by my employer.*
+
 Document ingestion and hybrid retrieval for AI agents, in Go, built on Temporal, OpenSearch and PostgreSQL.
 
 Granth takes a folder of messy enterprise files (Markdown, HTML, text, CSV, text PDFs and scanned PDFs), runs each one through a retry-safe Temporal workflow, and indexes layout-aware chunks into OpenSearch. Agents call it through MCP tools that return passages with citations: source file, page, section path and block range.

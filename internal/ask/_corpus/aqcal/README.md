@@ -4,6 +4,8 @@
 
 [![aqcal running in the browser](docs/screenshot.png)](https://aravindh97.github.io/aqcal/)
 
+*A personal project, built in my own time to learn. Not affiliated with or endorsed by my employer.*
+
 Calibration and fault detection for low-cost air-quality sensors, written as a streaming pipeline in Go.
 
 Community-run air-quality sensors cost about €30 and cover whole cities, but they drift, get stuck, saturate, and disagree with official stations. So their readings tend to get ignored. `aqcal` does three things:

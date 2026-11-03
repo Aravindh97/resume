@@ -4,6 +4,8 @@
 
 [![pallanguzhi running in the browser](docs/screenshot.png)](https://aravindh97.github.io/pallanguzhi/)
 
+*A personal project, built in my own time to learn. Not affiliated with or endorsed by my employer.*
+
 Pallanguzhi (பல்லாங்குழி), the fourteen-pit Tamil mancala game, with a rules engine and a search-based AI opponent in Go. No dependencies.
 
 ## Play it

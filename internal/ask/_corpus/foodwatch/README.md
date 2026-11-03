@@ -4,6 +4,8 @@
 
 [![foodwatch running in the browser](docs/screenshot.png)](https://aravindh97.github.io/foodwatch/)
 
+*A personal project, built in my own time to learn. Not affiliated with or endorsed by my employer.*
+
 Food-stress early warning in Go. It combines rainfall, staple cereal prices and livestock-to-cereal terms of trade per region, then backtests the alerts against what actually happened.
 
 Rain shortfalls and market shocks appear in public data months before a food crisis is officially classified. `foodwatch` computes simple, explainable signals for each region every month. It then checks them against **IPC** classifications, the official, consensus-based scale used by governments and UN agencies, where **Phase 3** means "Crisis".

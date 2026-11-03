@@ -4,6 +4,8 @@
 
 [![orbit running in the browser](docs/screenshot.png)](https://aravindh97.github.io/orbit/)
 
+*A personal project, built in my own time to learn. Not affiliated with or endorsed by my employer.*
+
 A satellite conjunction screener in Go: it finds when two objects in orbit will pass within a few kilometres of each other. You can screen your own satellites against the whole public catalogue, or screen every pair.
 
 Commercial collision-warning services are expensive. Student and startup satellite teams usually rely on free alerts, which are noisy and come late. This is an open, fast screener that runs on a laptop from CelesTrak's public data.

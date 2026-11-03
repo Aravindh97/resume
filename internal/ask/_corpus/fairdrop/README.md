@@ -4,6 +4,8 @@
 
 [![fairdrop running in the browser](docs/screenshot.png)](https://aravindh97.github.io/fairdrop/)
 
+*A personal project, built in my own time to learn. Not affiliated with or endorsed by my employer.*
+
 Ticketing for high-demand releases (first-day film shows, cricket, concerts) in Go and PostgreSQL. It solves two problems:
 
 1. **No seat is ever sold twice**, even with tens of thousands of buyers clicking at once, payments timing out, and people double-clicking "Pay".

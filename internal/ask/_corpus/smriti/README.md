@@ -4,6 +4,8 @@
 
 [![smriti running in the browser](docs/screenshot.png)](https://aravindh97.github.io/smriti/)
 
+*A personal project, built in my own time to learn. Not affiliated with or endorsed by my employer.*
+
 Long-term memory for LLM agents, in Go, on PostgreSQL + pgvector and Temporal.
 
 Smriti remembers what users say about themselves, their team and their organisation across sessions. When a fact changes, the new value replaces the old one instead of piling up next to it. The old value is kept as history, with its source message, so an agent can answer two kinds of question: "what is true now" and "what did we believe in February".
