@@ -46,6 +46,7 @@ var Profile = ProfileData{
 		{"relief", "Offline-first sync for disaster relief teams", "Go, CRDTs", gh + "/relief", pages + "/relief/"},
 		{"aqcal", "Low-cost air sensor calibration and fault detection", "Go streaming pipeline", gh + "/aqcal", pages + "/aqcal/"},
 		{"foodwatch", "Food-stress early warning backtested against IPC", "Go, CHIRPS, WFP", gh + "/foodwatch", pages + "/foodwatch/"},
+		{"Pallanguzhi", "The Tamil mancala game against a search AI that explains its moves", "Go, WebAssembly", gh + "/pallanguzhi", pages + "/pallanguzhi/"},
 		{"Resume", "This site: Raft mesh, Go WASM race simulator, git-native career", "Go, WebAssembly", gh + "/resume", ""},
 	},
 	Summary: []string{

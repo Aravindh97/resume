@@ -1,0 +1,18 @@
+A        B        A plays          games   A wins   draws   margin
+random   random   South (first)      200    26.0%       0    -41.6
+random   random   North (second)     200    70.5%       2    +44.2
+easy     random   South (first)      200    43.5%       3     +5.3
+easy     random   North (second)     200    89.0%       2    +78.1
+medium   random   South (first)      200    62.5%       0    +62.1
+medium   random   North (second)     200   100.0%       0   +110.5
+hard     random   South (first)      200    65.0%       0    +61.5
+hard     random   North (second)     200   100.0%       0   +110.4
+medium   easy     South (first)      200    16.5%       0     +4.0
+medium   easy     North (second)     200   100.0%       0    +84.5
+hard     easy     South (first)      200    24.5%       0    +10.7
+hard     easy     North (second)     200   100.0%       0    +56.5
+hard     medium   South (first)      200    44.5%       8    -10.4
+hard     medium   North (second)     200    60.5%       0    +25.6
+
+2800 games in 8m2s. Games between medium and hard start with 2 random plies; all others from the start position.
+start position searched to depth 12 (59206 nodes): South's best move is pit 6, value -24 seeds for South
