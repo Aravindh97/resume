@@ -76,9 +76,10 @@ var Profile = ProfileData{
 		Title: "Sr. Digital Marketing Associate, Amazon",
 		Dates: "2021 to present",
 		Bullets: []string{
-			"Built and automated internal tools and workflows for my team, replacing repetitive manual tasks with reliable, reusable solutions.",
-			"Worked with stakeholders to find process gaps, then designed, built and supported automation that the team adopted in daily work.",
-			"Grew from a marketing role into hands-on development, and built full-stack Go and React + TypeScript applications outside my core responsibilities.",
+			"Ran digital marketing campaigns and worked with the AU Retail Marketing and Merchandising team to improve the online storefront and the customer journey.",
+			"Built internal automation tools in Go that streamlined cross-functional workflows and removed manual bottlenecks for the team.",
+			"Worked as the team's data engineer: built data extraction pipelines, analysed retail datasets and designed interactive Power BI dashboards that gave leadership insights for regional commercial decisions.",
+			"Bridged marketing, merchandising and engineering, and built full-stack Go and React + TypeScript applications outside my core responsibilities.",
 		},
 	}},
 	Education: "Bachelor of Engineering (B.E.) in Mechanical Engineering",
