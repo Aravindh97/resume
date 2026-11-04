@@ -8,6 +8,8 @@ import (
 
 	"github.com/Aravindh97/pallanguzhi/internal/ai"
 	"github.com/Aravindh97/pallanguzhi/internal/game"
+	"github.com/Aravindh97/pallanguzhi/internal/room"
+	"github.com/Aravindh97/pallanguzhi/internal/server"
 	"github.com/Aravindh97/pallanguzhi/internal/tsgen"
 )
 
@@ -17,7 +19,8 @@ func main() {
 		log.Fatal(err)
 	}
 	defer f.Close()
-	if err := tsgen.Write(f, "pallanguzhi", game.Board{}, game.Event{}, ai.MoveScore{}, ai.Stats{}); err != nil {
+	if err := tsgen.Write(f, "pallanguzhi", game.Board{}, game.Event{}, ai.MoveScore{}, ai.Stats{},
+		room.State{}, server.ClientMsg{}, server.ServerMsg{}); err != nil {
 		log.Fatal(err)
 	}
 }

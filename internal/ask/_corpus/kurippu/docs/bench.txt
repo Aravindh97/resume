@@ -1,0 +1,6 @@
+# go test -bench . ./internal/crdt (8-core machine) and a two-browser latency run on loopback
+BenchmarkKeystroke1k-8    	    2000	    124957 ns/op
+BenchmarkKeystroke10k-8   	    2000	   1197110 ns/op
+BenchmarkApplyRemote-8    	    2000	    663428 ns/op
+BenchmarkTyping-8         	    2000	     61128 ns/op
+edit on one browser -> visible in another (loopback, 30 edits): median 368 ms, max 376 ms

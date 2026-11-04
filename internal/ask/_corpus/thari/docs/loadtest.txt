@@ -1,0 +1,8 @@
+# Server, database and load generator on one 8-core machine over loopback (DEMO=1 data).
+50 users for 20s against http://127.0.0.1:8095: 74044 requests, 3702/s
+request           count       p50       p95       p99 status codes
+list orders       31827     8.1ms    10.2ms    11.6ms map[200:31827]
+open order        31827    19.4ms      23ms    25.3ms map[200:31827]
+log progress       3981    14.6ms    17.5ms    19.5ms map[200:3978 422:3]
+dashboard          6409       8ms    10.2ms    11.5ms map[200:6409]
+orders breaking the stage order after the test: 0

@@ -1,0 +1,9 @@
+50 users (2 doctors, 16 at reception, 32 screens) for 20s: 41874 requests, 2094/s
+request            count       p50       p95       p99 status codes
+register            4885    25.4ms    48.1ms    57.5ms map[201:4885]
+walk-in token       4885    27.8ms    50.8ms    60.7ms map[201:4885]
+call next            669      28ms    51.9ms    62.7ms map[200:669]
+doctor queue         669    26.8ms    52.6ms    62.2ms map[200:669]
+reception list      1271    28.5ms    56.3ms    65.6ms map[200:1271]
+board              29495    11.1ms    21.8ms    26.9ms map[200:29495]
+checked 4270 visits today: 0 problems

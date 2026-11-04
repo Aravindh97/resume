@@ -1,0 +1,8 @@
+24 sending devices (3 people) and 30 readers for 20s: 10306 requests, 515/s
+request       count       p50       p95       p99 status codes
+send           2446   195.1ms   243.9ms   262.3ms map[200:2446]
+wallet         3930      74ms     102ms   112.3ms map[200:3930]
+activity       3930    78.6ms   102.6ms   115.3ms map[200:3930]
+payments that went through: 2015 (431 sent twice with the same key); a key answered with two different payments: 0
+ledger check: {"txns":2279,"entries":4558,"accounts":11,"unbalanced_txns":0,"wrong_balances":0,"broken_running":0,"negative_balances":0,"total":0,"ok":true}
+

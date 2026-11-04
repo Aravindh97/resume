@@ -29,7 +29,7 @@ function Hero({ p }: { p: ProfileData }) {
       <div className="glance">
         <div><b>{projects.filter((x) => x.name !== "Resume").length}</b>personal projects</div>
         <div><b>{live}</b>with a live demo</div>
-        <div><b>Go</b>services, compiled to WebAssembly for the demos</div>
+        <div><b>Go + Postgres</b>services behind every app</div>
         <div><b>React + TS</b>frontends, typed against the Go structs</div>
       </div>
     </section>
@@ -40,7 +40,7 @@ export function Projects({ p }: { p: ProfileData }) {
   return (
     <section className="block">
       <h2 className="section">Personal projects</h2>
-      <p className="muted">Built in my own time to learn; not affiliated with my employer. Each demo runs the repo's own Go code in your browser. Where the full system uses Postgres, OpenSearch or Temporal, the demo uses an in-memory store with the same rules, and the README reports the numbers measured against the real services.</p>
+      <p className="muted">Built in my own time to learn; not affiliated with my employer. The first four are full-stack apps running on a free server with a real Postgres database; the free server sleeps when idle, so the first visit can take up to a minute. The rest run the repo's own Go code in your browser as WebAssembly: where the full system uses Postgres, OpenSearch or Temporal, the demo uses an in-memory store with the same rules, and the README reports the numbers measured against the real services.</p>
       <div className="grid">
         {(p.projects ?? []).filter((x) => x.live).map((x) => (
           <article key={x.name} className="proj">

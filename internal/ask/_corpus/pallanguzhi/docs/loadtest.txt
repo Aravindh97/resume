@@ -1,0 +1,10 @@
+# go run ./cmd/loadtest (server and all clients on one 8-core machine, loopback)
+100 games at once (400 connections), 1801 moves in 531ms, 0 games failed
+move round trip (send move -> receive new state): p50 849µs  p90 7.156ms  p99 65.354ms  max 107.912ms
+
+200 games at once (800 connections), 3476 moves in 830ms, 0 games failed
+move round trip (send move -> receive new state): p50 2.598ms  p90 14.968ms  p99 95.87ms  max 171.643ms
+
+1000 games at once (4000 connections), 17792 moves in 2.881s, 0 games failed
+move round trip (send move -> receive new state): p50 13.781ms  p90 49.225ms  p99 721.546ms  max 1.2689s
+
